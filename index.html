@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>AI训练师三级练习</title>
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#2563eb" />
+
+  <style>
+:root {
+  --bg: #f0f2f5;
+  --card: #ffffff;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --success: #16a34a;
+  --error: #dc2626;
+  --warning: #d97706;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 4px 24px rgba(15, 23, 42, 0.08);
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  color: white;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.3);
+}
+
+header h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+header p {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  background: var(--card);
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+.tab-btn:hover:not(.active) {
+  background: var(--bg);
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.toolbar label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.toolbar select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.stats {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.stats strong {
+  color: var(--primary);
+}
+
+.stats strong.stat-good {
+  color: var(--success);
+}
+
+.stats strong.stat-bad {
+  color: var(--error);
+}
+
+.hint-bar {
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.confirm-row {
+  margin-top: 0.75rem;
+}
+
+.btn-confirm {
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+}
+
+/* 背题模式 */
+.study-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+#study-progress {
+  font-weight: 600;
+  color: var(--primary);
+  min-width: 5rem;
+  text-align: center;
+}
+
+.study-card {
+  border-left-color: var(--warning);
+}
+
+.study-option {
+  cursor: default;
+}
+
+.study-option.correct-answer {
+  border-color: var(--success);
+  background: #f0fdf4;
+}
+
+.answer-tag {
+  font-size: 0.75rem;
+  color: var(--success);
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.study-answer-summary {
+  margin-top: 1rem;
+  padding: 0.65rem 0.85rem;
+  background: #f0fdf4;
+  border-radius: 8px;
+  color: var(--success);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+#study-list-view .question-card {
+  margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.55rem 1.1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.btn-success:hover {
+  filter: brightness(1.05);
+}
+
+.btn-outline {
+  background: white;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.btn-outline:hover {
+  background: #eff6ff;
+}
+
+.btn-danger {
+  background: var(--error);
+  color: white;
+}
+
+.btn-danger:hover {
+  filter: brightness(1.05);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Question card */
+.question-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--primary);
+  transition: border-color 0.3s;
+}
+
+.question-card.correct {
+  border-left-color: var(--success);
+}
+
+.question-card.wrong {
+  border-left-color: var(--error);
+}
+
+.question-card.unchecked {
+  border-left-color: var(--border);
+}
+
+.q-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.q-chapter {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.q-num {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 0.95rem;
+}
+
+.q-type {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.q-type.single {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.q-type.multiple {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.q-type.judgment {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.q-stem {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.65rem 0.85rem;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.option:hover:not(.disabled) {
+  border-color: var(--primary);
+  background: #f8fafc;
+}
+
+.option.selected {
+  border-color: var(--primary);
+  background: #eff6ff;
+}
+
+.option.correct-answer {
+  border-color: var(--success);
+  background: #f0fdf4;
+}
+
+.option.wrong-answer {
+  border-color: var(--error);
+  background: #fef2f2;
+}
+
+.option.disabled {
+  cursor: default;
+}
+
+.option input {
+  margin-top: 0.25rem;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+}
+
+.option-label {
+  font-weight: 600;
+  color: var(--primary);
+  min-width: 1.2rem;
+}
+
+.option-text {
+  flex: 1;
+}
+
+.result-badge {
+  display: none;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.result-badge.show {
+  display: block;
+}
+
+.result-badge.correct {
+  background: #f0fdf4;
+  color: var(--success);
+}
+
+.result-badge.wrong {
+  background: #fef2f2;
+  color: var(--error);
+}
+
+/* Action bar */
+.action-bar {
+  position: sticky;
+  bottom: 0;
+  background: var(--card);
+  padding: 1rem;
+  border-radius: var(--radius);
+  box-shadow: 0 -4px 24px rgba(15, 23, 42, 0.1);
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+/* Summary modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 2rem;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.modal h2 {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.modal .score {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0.5rem 0;
+}
+
+.modal .detail {
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* Wrong book */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--muted);
+}
+
+.empty-state .icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.wrong-item {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--error);
+}
+
+.wrong-item .meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.wrong-item .stem {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.wrong-item .answer-info {
+  font-size: 0.85rem;
+}
+
+.wrong-item .your-ans {
+  color: var(--error);
+}
+
+.wrong-item .correct-ans {
+  color: var(--success);
+}
+
+.wrong-count-badge {
+  background: var(--error);
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  margin-left: 0.35rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem;
+  color: var(--muted);
+}
+
+@media (max-width: 600px) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  header {
+    padding-top: max(1.25rem, env(safe-area-inset-top));
+  }
+
+  header h1 {
+    font-size: 1.15rem;
+  }
+
+  .container {
+    padding: 0.75rem;
+  }
+
+  .tab-btn {
+    font-size: 0.82rem;
+    padding: 0.55rem 0.35rem;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar label {
+    width: 100%;
+  }
+
+  .toolbar select {
+    flex: 1;
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .btn {
+    min-height: 44px;
+  }
+
+  .option {
+    min-height: 48px;
+    padding: 0.75rem;
+  }
+
+  .stats {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .question-card {
+    padding: 1rem;
+  }
+
+  .action-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    border-radius: 0;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    z-index: 50;
+  }
+
+  #practice-panel {
+    padding-bottom: 5rem;
+  }
+}
+
+
+body { padding-bottom: env(safe-area-inset-bottom); }
+header { padding-top: max(1.5rem, env(safe-area-inset-top)); }
+.container { padding: 0.75rem; padding-bottom: 2rem; }
+.tab-btn { font-size: 0.82rem; padding: 0.55rem 0.4rem; }
+.toolbar select, .toolbar label { width: 100%; }
+.toolbar select { flex: 1; min-height: 44px; font-size: 16px; }
+.btn { min-height: 44px; }
+.option { min-height: 48px; padding: 0.75rem; }
+.action-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; margin: 0;
+  border-radius: 0; padding-bottom: max(1rem, env(safe-area-inset-bottom)); z-index: 50;
+}
+#practice-panel { padding-bottom: 5rem; }
+.hint-bar { font-size: 0.78rem; }
+
+  </style>
+</head>
+<body>
+<header>
+    <h1 id="page-title">人工智能训练师三级理论练习</h1>
+    <p id="page-subtitle">加载中...</p>
+  </header>
+
+  <div class="container">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="practice">练习模式</button>
+      <button class="tab-btn" data-tab="study">背题模式</button>
+      <button class="tab-btn" data-tab="wrongbook">
+        错题集
+        <span id="wrong-badge" class="wrong-count-badge hidden">0</span>
+      </button>
+    </div>
+
+    <!-- 练习面板 -->
+    <div id="practice-panel">
+      <div class="toolbar">
+        <label>
+          章节
+          <select id="chapter-filter"></select>
+        </label>
+        <label>
+          题型
+          <select id="type-filter">
+            <option value="all">全部</option>
+            <option value="single">单选</option>
+            <option value="multiple">多选</option>
+            <option value="judgment">判断</option>
+          </select>
+        </label>
+        <label>
+          顺序
+          <select id="order-filter">
+            <option value="id-asc">按题号</option>
+            <option value="id-desc">题号倒序</option>
+            <option value="random">随机</option>
+          </select>
+        </label>
+        <label>
+          数量
+          <select id="count-filter">
+            <option value="all">全部 180 题</option>
+            <option value="90">模拟考试 90 题</option>
+            <option value="30">快速练习 30 题</option>
+            <option value="10">每日 10 题</option>
+          </select>
+        </label>
+        <button class="btn btn-outline" id="btn-shuffle">重新随机</button>
+        <div class="stats">
+          当前 <strong id="stat-total">0</strong> 题 ·
+          已答 <strong id="stat-answered">0</strong> 题 ·
+          正确 <strong id="stat-correct" class="stat-good">0</strong> ·
+          错误 <strong id="stat-wrong" class="stat-bad">0</strong>
+        </div>
+      </div>
+
+      <div class="hint-bar">单选/判断：点选后立即显示答案；多选：选完后点「确认答案」</div>
+
+      <div id="question-list">
+        <div class="loading">正在加载题目...</div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn btn-success" id="btn-summary">查看练习统计</button>
+        <button class="btn btn-outline" id="btn-reset">重新开始</button>
+      </div>
+    </div>
+
+    <!-- 背题面板 -->
+    <div id="study-panel" class="hidden">
+      <div class="toolbar">
+        <label>
+          章节
+          <select id="study-chapter-filter"></select>
+        </label>
+        <label>
+          题型
+          <select id="study-type-filter">
+            <option value="all">全部</option>
+            <option value="single">单选</option>
+            <option value="multiple">多选</option>
+            <option value="judgment">判断</option>
+          </select>
+        </label>
+        <label>
+          浏览
+          <select id="study-view-mode">
+            <option value="card">逐题浏览</option>
+            <option value="list">列表全览</option>
+          </select>
+        </label>
+        <div class="stats">
+          共 <strong id="study-stat-total">0</strong> 题
+        </div>
+      </div>
+
+      <div id="study-card-view">
+        <div class="study-nav">
+          <button class="btn btn-outline" id="study-prev">上一题</button>
+          <span id="study-progress">1 / 1</span>
+          <button class="btn btn-outline" id="study-next">下一题</button>
+        </div>
+        <div id="study-card"></div>
+      </div>
+
+      <div id="study-list-view" class="hidden"></div>
+    </div>
+
+    <!-- 错题集面板 -->
+    <div id="wrongbook-panel" class="hidden">
+      <div class="toolbar">
+        <button class="btn btn-primary" id="btn-practice-wrong">练习全部错题</button>
+        <button class="btn btn-outline" id="btn-export-wrong">导出错题集</button>
+        <button class="btn btn-danger" id="btn-clear-wrong">清空错题集</button>
+      </div>
+      <div id="wrong-list">
+        <div class="empty-state">
+          <div class="icon">📚</div>
+          <p>暂无错题</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 成绩弹窗 -->
+  <div class="modal-overlay" id="summary-modal">
+    <div class="modal">
+      <h2>练习统计</h2>
+      <div class="score" id="summary-score">0%</div>
+      <div class="detail" id="summary-detail"></div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btn-close-modal">继续练习</button>
+        <button class="btn btn-outline" id="btn-reset-from-modal">重新开始</button>
+      </div>
+    </div>
+  </div>
+  <script>
+window.QUESTIONS_DATA = {"title": "2026人工智能训练师三级理论题", "total": 180, "chapters": [{"id": "nlp", "name": "自然语言处理"}, {"id": "image", "name": "数字图像处理"}, {"id": "bigdata", "name": "大数据技术"}, {"id": "ml_ai", "name": "机器学习与深度学习"}, {"id": "python", "name": "Python编程"}, {"id": "hardware", "name": "数字电路与硬件"}, {"id": "network", "name": "网络与通信"}, {"id": "datastructure", "name": "数据结构"}, {"id": "computer", "name": "计算机基础"}, {"id": "project", "name": "项目管理"}, {"id": "law", "name": "法律法规"}, {"id": "search_knowledge", "name": "人工智能基础"}, {"id": "ethics", "name": "职业道德与素养"}, {"id": "general", "name": "综合其他"}], "questions": [{"id": 1, "type": "single", "chapter": "ethics", "stem": "确立正确的人生观是加强职业道德修养的（  ）。", "options": [{"id": "A", "text": "主要途径", "correct": false}, {"id": "B", "text": "前提", "correct": true}, {"id": "C", "text": "基础", "correct": false}, {"id": "D", "text": "目的", "correct": false}]}, {"id": 2, "type": "single", "chapter": "ethics", "stem": "爱岗敬业并非要求员工做到(  )。", "options": [{"id": "A", "text": "树立职业理想", "correct": false}, {"id": "B", "text": "干一行爱一行", "correct": false}, {"id": "C", "text": "个人技术水平高", "correct": false}, {"id": "D", "text": "团结互助", "correct": true}]}, {"id": 3, "type": "single", "chapter": "ethics", "stem": "最能促进事业发展的是（  ）。", "options": [{"id": "A", "text": "企业内耗", "correct": false}, {"id": "B", "text": "我行我素", "correct": false}, {"id": "C", "text": "个人技术水平高", "correct": false}, {"id": "D", "text": "团结互助", "correct": true}]}, {"id": 4, "type": "single", "chapter": "general", "stem": "下列属于人工智能训练师不需要具备的能⼒（   ）。", "options": [{"id": "A", "text": "数据能⼒、分析能⼒", "correct": false}, {"id": "B", "text": "AI技术理解⼒", "correct": false}, {"id": "C", "text": "开发智能系统", "correct": false}, {"id": "D", "text": "沟通能力", "correct": true}]}, {"id": 5, "type": "single", "chapter": "computer", "stem": "一个完好的微型计算机系统应包括(  )。", "options": [{"id": "A", "text": "计算机及外部设备", "correct": false}, {"id": "B", "text": "主机箱、键盘、显示器和打印机", "correct": false}, {"id": "C", "text": "硬件系统和软件系统", "correct": true}, {"id": "D", "text": "系统软件和系统硬件", "correct": false}]}, {"id": 6, "type": "single", "chapter": "computer", "stem": "下列（ ）方式不能关闭当前窗口。", "options": [{"id": "A", "text": "标题栏上的“关闭”按钮", "correct": false}, {"id": "B", "text": "“文件”菜单中的“退出”", "correct": false}, {"id": "C", "text": "按Alt+F4快捷键", "correct": false}, {"id": "D", "text": "按Alt+ESC快捷键", "correct": true}]}, {"id": 7, "type": "single", "chapter": "computer", "stem": "下列（）不是Access数据库的对象类型。", "options": [{"id": "A", "text": "表", "correct": false}, {"id": "B", "text": "向导", "correct": true}, {"id": "C", "text": "窗体", "correct": false}, {"id": "D", "text": "报表", "correct": false}]}, {"id": 8, "type": "single", "chapter": "computer", "stem": "选择连续文件时，用鼠标单击第一个文件，再按下（    ）键单击最终的对象。", "options": [{"id": "A", "text": "Shift", "correct": true}, {"id": "B", "text": "Ctrl", "correct": false}, {"id": "C", "text": "ALT", "correct": false}, {"id": "D", "text": "DEL", "correct": false}]}, {"id": 9, "type": "single", "chapter": "computer", "stem": "退出当前应用程序的运行的快捷键是(   ) 。", "options": [{"id": "A", "text": "ALT+F4", "correct": true}, {"id": "B", "text": "ALT+F5", "correct": false}, {"id": "C", "text": "ALT+F6", "correct": false}, {"id": "D", "text": "ALT+F7", "correct": false}]}, {"id": 10, "type": "single", "chapter": "law", "stem": "行为人承担停止侵害的民事责任构成要件是（  ）。", "options": [{"id": "A", "text": "行为人实施了侵害知识产权的行为", "correct": true}, {"id": "B", "text": "权利人有财产损失", "correct": false}, {"id": "C", "text": "行为人的侵权行为与权利人的损失之间有因果关系", "correct": false}, {"id": "D", "text": "行为人有过错", "correct": false}]}, {"id": 11, "type": "single", "chapter": "ethics", "stem": "逆向思维法不包含的内容是（    ）。", "options": [{"id": "A", "text": "功能反转", "correct": false}, {"id": "B", "text": "结构反转", "correct": false}, {"id": "C", "text": "状态反转", "correct": false}, {"id": "D", "text": "伦理反转", "correct": true}]}, {"id": 12, "type": "single", "chapter": "hardware", "stem": "Logisim中蓝色线缆代表什么值（）。", "options": [{"id": "A", "text": "x（不确定值）", "correct": true}, {"id": "B", "text": "其他", "correct": false}, {"id": "C", "text": "1", "correct": false}, {"id": "D", "text": "0", "correct": false}]}, {"id": 13, "type": "single", "chapter": "hardware", "stem": "三角波和锯齿波发生电路一般有()环节。", "options": [{"id": "A", "text": "状态", "correct": false}, {"id": "B", "text": "动作", "correct": false}, {"id": "C", "text": "积分", "correct": true}, {"id": "D", "text": "比赛", "correct": false}]}, {"id": 14, "type": "single", "chapter": "hardware", "stem": "八输入端的编码器按二进制数编码时，输出端的个数是（   ）。", "options": [{"id": "A", "text": "4个", "correct": false}, {"id": "B", "text": "2个", "correct": false}, {"id": "C", "text": "3个", "correct": true}, {"id": "D", "text": "8个", "correct": false}]}, {"id": 15, "type": "single", "chapter": "hardware", "stem": "数码管由（ ）个发光二极管构成8字形结构。", "options": [{"id": "A", "text": "9", "correct": false}, {"id": "B", "text": "5", "correct": false}, {"id": "C", "text": "7", "correct": true}, {"id": "D", "text": "3", "correct": false}]}, {"id": 16, "type": "single", "chapter": "hardware", "stem": "8259接口芯片有（ ）个地址。", "options": [{"id": "A", "text": "1", "correct": false}, {"id": "B", "text": "8", "correct": false}, {"id": "C", "text": "4", "correct": false}, {"id": "D", "text": "2", "correct": true}]}, {"id": 17, "type": "single", "chapter": "project", "stem": "下面（）不是项目的三重约束。", "options": [{"id": "A", "text": "时间", "correct": false}, {"id": "B", "text": "性能", "correct": false}, {"id": "C", "text": "费用", "correct": false}, {"id": "D", "text": "质量", "correct": true}]}, {"id": 18, "type": "single", "chapter": "project", "stem": "确保项目产品的说明是正确和完整的是（ ）。", "options": [{"id": "A", "text": "配置管理", "correct": true}, {"id": "B", "text": "综合变更控制", "correct": false}, {"id": "C", "text": "综合管理", "correct": false}, {"id": "D", "text": "变更控制委员会", "correct": false}]}, {"id": 19, "type": "single", "chapter": "project", "stem": "全球IT外包服务的首要原因是（）。", "options": [{"id": "A", "text": "成本削减", "correct": false}, {"id": "B", "text": "合格人才短缺", "correct": true}, {"id": "C", "text": "缩短面试时间", "correct": false}, {"id": "D", "text": "增加收入", "correct": false}]}, {"id": 20, "type": "single", "chapter": "project", "stem": "原型法可以分为模型式原型、()和演进式原型三种。", "options": [{"id": "A", "text": "模型式原型", "correct": false}, {"id": "B", "text": "渐进式原型", "correct": true}, {"id": "C", "text": "演进式原型", "correct": false}, {"id": "D", "text": "突进型", "correct": false}]}, {"id": 21, "type": "single", "chapter": "project", "stem": "系统分析主要解决信息系统“（）”的问题，具体怎么做的问题是系统设计阶段的任务。", "options": [{"id": "A", "text": "时间", "correct": false}, {"id": "B", "text": "做什么", "correct": true}, {"id": "C", "text": "状态", "correct": false}, {"id": "D", "text": "日期", "correct": false}]}, {"id": 22, "type": "single", "chapter": "general", "stem": "衡量系统开发质量的首要标准是(      )。", "options": [{"id": "A", "text": "技术规范", "correct": false}, {"id": "B", "text": "满足用户要求", "correct": true}, {"id": "C", "text": "满足技术指标", "correct": false}, {"id": "D", "text": "满足设计者要求", "correct": false}]}, {"id": 23, "type": "single", "chapter": "python", "stem": "执行“print(0o20)”，则在屏幕上会输出（    ）。", "options": [{"id": "A", "text": "32", "correct": false}, {"id": "B", "text": "0o20", "correct": false}, {"id": "C", "text": "20", "correct": false}, {"id": "D", "text": "16", "correct": true}]}, {"id": 24, "type": "single", "chapter": "python", "stem": "类方法的第一个形参对应（    ）。", "options": [{"id": "A", "text": "类", "correct": true}, {"id": "B", "text": "第二个实参", "correct": false}, {"id": "C", "text": "对象", "correct": false}, {"id": "D", "text": "第一个实参", "correct": false}]}, {"id": 25, "type": "single", "chapter": "image", "stem": "什么滤波器在对图像复原过程中需要计算噪声功率谱和图像功率谱(  )。", "options": [{"id": "A", "text": "逆滤波", "correct": false}, {"id": "B", "text": "维纳滤波", "correct": true}, {"id": "C", "text": "带通滤波", "correct": false}, {"id": "D", "text": "陷波滤波", "correct": false}]}, {"id": 26, "type": "single", "chapter": "image", "stem": "下列因素中与客观保真度有关的是(  )。", "options": [{"id": "A", "text": "输入图与输出图之间的误差", "correct": false}, {"id": "B", "text": "输入图与输出图之间的均方根误差", "correct": true}, {"id": "C", "text": "压缩图与解压缩图的视觉质量", "correct": false}, {"id": "D", "text": "压缩图与解压缩图的信噪比", "correct": false}]}, {"id": 27, "type": "single", "chapter": "image", "stem": "下列关于灰度直方图和图像面积叙述正确的是(  )。", "options": [{"id": "A", "text": "图像面积越大，灰度直方图的X轴越长", "correct": false}, {"id": "B", "text": "灰度直方图按横轴积分得到的值就是图像的面积", "correct": true}, {"id": "C", "text": "图像的面积与图像的灰度直方图没有关系", "correct": false}, {"id": "D", "text": "图像面积越大，灰度直方图的Y轴越长", "correct": false}]}, {"id": 28, "type": "single", "chapter": "ml_ai", "stem": "“二手车价格预测”场景属于（ ）机器学习的典型任务。", "options": [{"id": "A", "text": "聚类", "correct": false}, {"id": "B", "text": "回归", "correct": true}, {"id": "C", "text": "关联", "correct": false}, {"id": "D", "text": "分类", "correct": false}]}, {"id": 29, "type": "single", "chapter": "bigdata", "stem": "以下(  )不是Hadoop的缺点。", "options": [{"id": "A", "text": "磁盘I/O开销大", "correct": false}, {"id": "B", "text": "计算表达能力有限", "correct": false}, {"id": "C", "text": "数据文件被分布存储到多台机器上", "correct": true}, {"id": "D", "text": "计算延迟高", "correct": false}]}, {"id": 30, "type": "single", "chapter": "bigdata", "stem": "判断HDFS是否启动成功，可以通过（ ）命令。", "options": [{"id": "A", "text": "hdfs", "correct": false}, {"id": "B", "text": "spark", "correct": false}, {"id": "C", "text": "jps", "correct": true}, {"id": "D", "text": "start-dfs", "correct": false}]}, {"id": 31, "type": "single", "chapter": "search_knowledge", "stem": "在搜索过程中，当扩展节点时，以下说法错误的是：( )。", "options": [{"id": "A", "text": "通常适用于一个节点的算符只有一个。", "correct": true}, {"id": "B", "text": "一个节点经一个算符操作通常只生成一个子节点。", "correct": false}, {"id": "C", "text": "扩展节点时，会生成该节点的所有后继节点。", "correct": false}, {"id": "D", "text": "判断子节点是否是当前扩展节点的父节点、祖父节点等，若是，则删除。", "correct": false}]}, {"id": 32, "type": "single", "chapter": "search_knowledge", "stem": "纳什均衡是指以下（ ）情况。", "options": [{"id": "A", "text": "背叛，背叛", "correct": true}, {"id": "B", "text": "合作，背叛", "correct": false}, {"id": "C", "text": "合作，合作", "correct": false}, {"id": "D", "text": "背叛，合作", "correct": false}]}, {"id": 33, "type": "single", "chapter": "search_knowledge", "stem": "以下说法错误的是( )。", "options": [{"id": "A", "text": "样本空间的信任函数为1", "correct": false}, {"id": "B", "text": "样本空间的概率分配函数为1", "correct": true}, {"id": "C", "text": "空集的信任函数为0", "correct": false}, {"id": "D", "text": "空集的概率分配函数为0", "correct": false}]}, {"id": 34, "type": "single", "chapter": "ml_ai", "stem": "人工智能发展有很长的历史,其中，深度学习模型于(）提出。", "options": [{"id": "A", "text": "1946年", "correct": false}, {"id": "B", "text": "1956年", "correct": false}, {"id": "C", "text": "1986年", "correct": false}, {"id": "D", "text": "2006年", "correct": true}]}, {"id": 35, "type": "single", "chapter": "image", "stem": "常应用于统计直方图中的信息的是（  ）。", "options": [{"id": "A", "text": "calcHist()", "correct": true}, {"id": "B", "text": "cvtColor()", "correct": false}, {"id": "C", "text": "blur()", "correct": false}, {"id": "D", "text": "remap()", "correct": false}]}, {"id": 36, "type": "single", "chapter": "python", "stem": "在pycharm使用anaconda需要（  ）。", "options": [{"id": "A", "text": "初始化虚拟环境", "correct": false}, {"id": "B", "text": "创建虚拟环境", "correct": true}, {"id": "C", "text": "进入虚拟环境", "correct": false}, {"id": "D", "text": "退出虚拟环境", "correct": false}]}, {"id": 37, "type": "single", "chapter": "general", "stem": "借助（  ）软件可以将图片形式的文字转化成文本。", "options": [{"id": "A", "text": "文字识别", "correct": true}, {"id": "B", "text": "车牌识别", "correct": false}, {"id": "C", "text": "银行卡识别", "correct": false}, {"id": "D", "text": "名片识别", "correct": false}]}, {"id": 38, "type": "single", "chapter": "nlp", "stem": "给定⼀个句⼦，预测其分解⽣成的语法树的是（  ）。", "options": [{"id": "A", "text": "分类", "correct": false}, {"id": "B", "text": "回归", "correct": false}, {"id": "C", "text": "语法树预测", "correct": true}, {"id": "D", "text": "⽬标检测", "correct": false}]}, {"id": 39, "type": "single", "chapter": "ml_ai", "stem": "对于训练完成的神经⽹络,（   ）⽤于客观的评价神经⽹络的性能。", "options": [{"id": "A", "text": "训练集", "correct": false}, {"id": "B", "text": "测试集", "correct": true}, {"id": "C", "text": "验证集", "correct": false}, {"id": "D", "text": "检验集", "correct": false}]}, {"id": 40, "type": "single", "chapter": "ml_ai", "stem": "EM算法，称为（  ），它⽤于求解MLE的⼀种迭代算法。", "options": [{"id": "A", "text": "期望", "correct": false}, {"id": "B", "text": "期望-最⼤化", "correct": true}, {"id": "C", "text": "最大化", "correct": false}, {"id": "D", "text": "最小化", "correct": false}]}, {"id": 41, "type": "multiple", "chapter": "computer", "stem": "以下（ ）显示在Word窗口的状态栏中.", "options": [{"id": "A", "text": "文档名", "correct": false}, {"id": "B", "text": "当前页与总页数", "correct": true}, {"id": "C", "text": "光标插入位置", "correct": true}, {"id": "D", "text": "当前页的页眉", "correct": false}, {"id": "E", "text": "放大缩小按钮", "correct": true}]}, {"id": 42, "type": "multiple", "chapter": "hardware", "stem": "单周期CPU设计实验中控制器单元不是什么（）。", "options": [{"id": "A", "text": "混合时序电路", "correct": true}, {"id": "B", "text": "组合逻辑电路", "correct": false}, {"id": "C", "text": "异步时序逻辑电路", "correct": true}, {"id": "D", "text": "同步时序逻辑电路", "correct": true}, {"id": "E", "text": "没有", "correct": false}]}, {"id": 43, "type": "multiple", "chapter": "project", "stem": "项目资源计划工具包括（）。", "options": [{"id": "A", "text": "资源矩阵", "correct": true}, {"id": "B", "text": "甘特图", "correct": true}, {"id": "C", "text": "资源需求清单", "correct": false}, {"id": "D", "text": "资源负荷图", "correct": true}, {"id": "E", "text": "都包括", "correct": false}]}, {"id": 44, "type": "multiple", "chapter": "nlp", "stem": "以下方面属于数字图像处理的应用有：(  )。", "options": [{"id": "A", "text": "无人船", "correct": true}, {"id": "B", "text": "人脸识别", "correct": true}, {"id": "C", "text": "视频监控", "correct": true}, {"id": "D", "text": "智能机器人", "correct": true}, {"id": "E", "text": "语音识别", "correct": false}]}, {"id": 45, "type": "multiple", "chapter": "bigdata", "stem": "下面的论述中，正确的是：（    ）。", "options": [{"id": "A", "text": "传统的机器学习算法，由于技术和单机存储的限制，大多只能在少量数据上使用", "correct": true}, {"id": "B", "text": "利用MapReduce框架在全量数据上进行机器学习，这在一定程度上解决了统计随机性的问题，提高了机器学习的精度", "correct": true}, {"id": "C", "text": "MapReduce可以高效支持迭代计算", "correct": false}, {"id": "D", "text": "Spark无法高效支持迭代计算", "correct": false}, {"id": "E", "text": "技术上，转换器实现了一个方法fit()，它通过附加一个或多个列，将一个DataFrame转换为另一个DataFrame", "correct": false}]}, {"id": 46, "type": "multiple", "chapter": "ml_ai", "stem": "逻辑回归的优点包括（  ）。", "options": [{"id": "A", "text": "形式简单", "correct": true}, {"id": "B", "text": "模型效果好", "correct": true}, {"id": "C", "text": "训练速度较快", "correct": true}, {"id": "D", "text": "资源占用小", "correct": true}, {"id": "E", "text": "⽅便输出结果调整", "correct": true}]}, {"id": 47, "type": "multiple", "chapter": "datastructure", "stem": "数组M可存放10个元素，每个元素占4个字节，从首地址x开始按顺序连续存放，那么，元素M[8]的起始地址错误的有（）。", "options": [{"id": "A", "text": "x+8", "correct": true}, {"id": "B", "text": "x+28", "correct": true}, {"id": "C", "text": "x+64", "correct": true}, {"id": "D", "text": "x+32", "correct": false}, {"id": "E", "text": "都不对", "correct": false}]}, {"id": 48, "type": "multiple", "chapter": "datastructure", "stem": "在多个应用中读取共享存储数据时，需要用到的query方法，不是（ ）对象的方法?", "options": [{"id": "A", "text": "ContentProvider", "correct": true}, {"id": "B", "text": "Cursor", "correct": true}, {"id": "C", "text": "ContentResolver", "correct": false}, {"id": "D", "text": "SQLiteHelper", "correct": true}, {"id": "E", "text": "都不是", "correct": false}]}, {"id": 49, "type": "multiple", "chapter": "ethics", "stem": "APP内文字的大小设置与（ ）密切相关。", "options": [{"id": "A", "text": "所使用颜色", "correct": false}, {"id": "B", "text": "所在页面", "correct": true}, {"id": "C", "text": "所表述内容", "correct": true}, {"id": "D", "text": "所在层次", "correct": true}, {"id": "E", "text": "内存大小", "correct": false}]}, {"id": 50, "type": "multiple", "chapter": "ethics", "stem": "教学方法论由教学方法（ ）四个层面组成。", "options": [{"id": "A", "text": "指导思想", "correct": true}, {"id": "B", "text": "基本方法", "correct": true}, {"id": "C", "text": "具体方法", "correct": true}, {"id": "D", "text": "教学方式", "correct": true}, {"id": "E", "text": "教学结论", "correct": false}]}, {"id": 51, "type": "judgment", "chapter": "ethics", "stem": "人工智能训练师是使用智能训练软件，在人工智能产品实际使用过程中进行数据库管理、算法参数设置、人机交互设计、性能测试跟踪及其他辅助作业的人员（ ）。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 52, "type": "judgment", "chapter": "network", "stem": "TCP/IP协议实际上是一组协议，是一个完整的体系结构。〔   〕", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 53, "type": "judgment", "chapter": "law", "stem": "劳动关系不限于自然人的与用人单位之间，还可以是单位之间、自然人之间，并且可能是两个主体以上（ ）。", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 54, "type": "judgment", "chapter": "hardware", "stem": "循环冗余校验码不具有纠错功能。", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 55, "type": "judgment", "chapter": "hardware", "stem": "立即数可以直接送段寄存器。", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 56, "type": "judgment", "chapter": "ethics", "stem": "执行力的定义是实现目标任务的实际程度。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 57, "type": "judgment", "chapter": "project", "stem": "在系统设计阶段，要根据系统分析阶段的结果，设计新系统的物理模型。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 58, "type": "judgment", "chapter": "python", "stem": "使用三引号创建字符串时不允许使用转义符。", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 59, "type": "judgment", "chapter": "python", "stem": "Numpy的Series对象在进行运算时，其默认索引值是0到n-1可以参与运算，而自定义索引值不会参与运算。", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 60, "type": "judgment", "chapter": "bigdata", "stem": "在Shark原有的架构上重写了逻辑执行计划的优化部分，解决了Shark存在的问题。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 61, "type": "single", "chapter": "ethics", "stem": "下列关于职业道德的说法中，正确的是（ ）。", "options": [{"id": "A", "text": "职业道德的形式因行业不同而有所不同", "correct": false}, {"id": "B", "text": "职业道德在内容上具有变动性", "correct": false}, {"id": "C", "text": "职业道德在适用范围上具有普遍性", "correct": true}, {"id": "D", "text": "讲求职业道德会降低企业竞争力", "correct": false}]}, {"id": 62, "type": "single", "chapter": "ethics", "stem": "提高生产效率,促进企业发展的重中之重是(  )。", "options": [{"id": "A", "text": "文明礼貌", "correct": false}, {"id": "B", "text": "团结互助", "correct": true}, {"id": "C", "text": "自学成才", "correct": false}, {"id": "D", "text": "勤劳品质", "correct": false}]}, {"id": 63, "type": "single", "chapter": "ethics", "stem": "最能促进事业发展的是（  ）。", "options": [{"id": "A", "text": "企业内耗", "correct": false}, {"id": "B", "text": "我行我素", "correct": false}, {"id": "C", "text": "个人技术水平高", "correct": false}, {"id": "D", "text": "团结互助", "correct": true}]}, {"id": 64, "type": "single", "chapter": "image", "stem": "下列文件格式中，（  ）是静态图像压缩标准。", "options": [{"id": "A", "text": "PAL", "correct": false}, {"id": "B", "text": "JPEG", "correct": true}, {"id": "C", "text": "MPEG", "correct": false}, {"id": "D", "text": "NTSC", "correct": false}]}, {"id": 65, "type": "single", "chapter": "computer", "stem": "发现病毒后，比较彻底的去除方式是(  )。", "options": [{"id": "A", "text": "用查毒软件处理", "correct": false}, {"id": "B", "text": "用杀毒软件处理", "correct": false}, {"id": "C", "text": "删除磁盘文件", "correct": false}, {"id": "D", "text": "格式化磁盘", "correct": true}]}, {"id": 66, "type": "single", "chapter": "computer", "stem": "Excel的缺省工作簿名称是(   )。", "options": [{"id": "A", "text": "文档1", "correct": false}, {"id": "B", "text": "sheet1", "correct": false}, {"id": "C", "text": "book1", "correct": true}, {"id": "D", "text": "DOC", "correct": false}]}, {"id": 67, "type": "single", "chapter": "computer", "stem": "退出当前应用程序的运行的快捷键是(   ) 。", "options": [{"id": "A", "text": "ALT+F4", "correct": true}, {"id": "B", "text": "ALT+F5", "correct": false}, {"id": "C", "text": "ALT+F6", "correct": false}, {"id": "D", "text": "ALT+F7", "correct": false}]}, {"id": 68, "type": "single", "chapter": "law", "stem": "劳动者提前（  ）以书面形式通知用人单位，可以解除劳动合同。", "options": [{"id": "A", "text": "十五日", "correct": false}, {"id": "B", "text": "三十日", "correct": true}, {"id": "C", "text": "六十日", "correct": false}, {"id": "D", "text": "三个月", "correct": false}]}, {"id": 69, "type": "single", "chapter": "network", "stem": "关键信息基础设施的运营者采购网络产品和服务，应当按照规定与提供者签订（    ），明确安全和保密义务与责任。", "options": [{"id": "A", "text": "安全服务合同", "correct": false}, {"id": "B", "text": "安全责任条款", "correct": false}, {"id": "C", "text": "保密合同", "correct": false}, {"id": "D", "text": "安全保密协议", "correct": true}]}, {"id": 70, "type": "single", "chapter": "general", "stem": "两个8位二进制数进行比较，不考虑硬件成本，以下输出信号哪个时延最短（）。", "options": [{"id": "A", "text": "大于", "correct": false}, {"id": "B", "text": "等于", "correct": true}, {"id": "C", "text": "都一样", "correct": false}, {"id": "D", "text": "小于", "correct": false}]}, {"id": 71, "type": "single", "chapter": "hardware", "stem": "在多位加法器中，影响加法器运算速度的关键因素是（）。", "options": [{"id": "A", "text": "各位加法器速度的不同", "correct": false}, {"id": "B", "text": "元器件速度", "correct": false}, {"id": "C", "text": "门电路的级延迟", "correct": false}, {"id": "D", "text": "进位传递延迟", "correct": true}]}, {"id": 72, "type": "single", "chapter": "hardware", "stem": "假设一个门电路时间延迟为T，全部采用2输入门电路构成的一位全加器时间延迟是（）。", "options": [{"id": "A", "text": "3T", "correct": true}, {"id": "B", "text": "5T", "correct": false}, {"id": "C", "text": "2T", "correct": false}, {"id": "D", "text": "4T", "correct": false}]}, {"id": 73, "type": "single", "chapter": "hardware", "stem": "DS1302和单片机的普通I/O口相连时都要加上上拉电阻，也就是空闲时，数据线保持（ ）电平。", "options": [{"id": "A", "text": "高低都行", "correct": false}, {"id": "B", "text": "高低都不行", "correct": false}, {"id": "C", "text": "低", "correct": false}, {"id": "D", "text": "高", "correct": true}]}, {"id": 74, "type": "single", "chapter": "hardware", "stem": "两片8259级联，主片ICW3设为20H，则从片的INT引脚和主片（ ）引脚相连。", "options": [{"id": "A", "text": "IR4", "correct": false}, {"id": "B", "text": "IR3", "correct": false}, {"id": "C", "text": "IR2", "correct": false}, {"id": "D", "text": "IR5", "correct": true}]}, {"id": 75, "type": "single", "chapter": "project", "stem": "（）是将知识、能力、工具和技术应用到项目活动上，以满足项目需求。", "options": [{"id": "A", "text": "项目群管理", "correct": false}, {"id": "B", "text": "项目管理", "correct": true}, {"id": "C", "text": "项目组合管理", "correct": false}, {"id": "D", "text": "需求管理", "correct": false}]}, {"id": 76, "type": "single", "chapter": "project", "stem": "项目质量管理的目的是（）。", "options": [{"id": "A", "text": "尽可能生产出最高质量的产品和服务", "correct": false}, {"id": "B", "text": "确保符合相应的质量标准", "correct": false}, {"id": "C", "text": "确保项目满足它所应满足的需求", "correct": true}, {"id": "D", "text": "上述所有", "correct": false}]}, {"id": 77, "type": "single", "chapter": "project", "stem": "在拟定项目初步成本估算时，项目经理最初需要的资料是（） 。", "options": [{"id": "A", "text": "核查估算过程", "correct": false}, {"id": "B", "text": "成本管理计划", "correct": true}, {"id": "C", "text": "现有的历史数据", "correct": false}, {"id": "D", "text": "自下而上的估算", "correct": false}, {"id": "E", "text": "选项5", "correct": false}]}, {"id": 78, "type": "single", "chapter": "project", "stem": "一个（）报告描述了项目在一个特定的时间点所处的位置。", "options": [{"id": "A", "text": "状态", "correct": false}, {"id": "B", "text": "绩效", "correct": true}, {"id": "C", "text": "预测", "correct": false}, {"id": "D", "text": "挣值", "correct": false}]}, {"id": 79, "type": "single", "chapter": "computer", "stem": "按照数据的动态特性划分,具有随机变动属性的数据应放在(      )。", "options": [{"id": "A", "text": "周转文件中", "correct": false}, {"id": "B", "text": "处理文件中", "correct": true}, {"id": "C", "text": "主文件中", "correct": false}, {"id": "D", "text": "后备文件中", "correct": false}]}, {"id": 80, "type": "single", "chapter": "python", "stem": "下列选项中，用于将各种类型的数据（字符串、整数、浮点数、列表、字典等）输出到屏幕上的函数是（    ）。", "options": [{"id": "A", "text": "input", "correct": false}, {"id": "B", "text": "eval", "correct": false}, {"id": "C", "text": "get", "correct": false}, {"id": "D", "text": "print", "correct": true}]}, {"id": 81, "type": "single", "chapter": "python", "stem": "不定长的位置参数在传递给函数时会被封装成（    ）。", "options": [{"id": "A", "text": "字典", "correct": false}, {"id": "B", "text": "元组", "correct": true}, {"id": "C", "text": "列表", "correct": false}, {"id": "D", "text": "集合", "correct": false}]}, {"id": 82, "type": "single", "chapter": "image", "stem": "​频谱均匀分布的噪声被称为(  )。", "options": [{"id": "A", "text": "高斯噪声", "correct": false}, {"id": "B", "text": "椒盐噪声", "correct": false}, {"id": "C", "text": "白噪声", "correct": true}, {"id": "D", "text": "随机噪声", "correct": false}]}, {"id": 83, "type": "single", "chapter": "image", "stem": "下列算法中属于图像锐化处理的是(  )。", "options": [{"id": "A", "text": "中值滤波", "correct": false}, {"id": "B", "text": "加权平均", "correct": false}, {"id": "C", "text": "低通滤波", "correct": true}, {"id": "D", "text": "高通滤波", "correct": false}]}, {"id": 84, "type": "single", "chapter": "image", "stem": "对一幅数字图像来说，若以8位二进制存储，则该图像可以有（     ）灰度级。", "options": [{"id": "A", "text": "8", "correct": false}, {"id": "B", "text": "64", "correct": false}, {"id": "C", "text": "256", "correct": true}, {"id": "D", "text": "512", "correct": false}]}, {"id": 85, "type": "single", "chapter": "bigdata", "stem": "以下关于分布式文件系统HDFS的说法不正确的是：(  )。", "options": [{"id": "A", "text": "数据块（Block）是HDFS文件系统基本的存储单位", "correct": false}, {"id": "B", "text": "HDFS支持多用户写入，任意修改文件", "correct": true}, {"id": "C", "text": "HDFS支持存储TB-PB级别的数据", "correct": false}, {"id": "D", "text": "HDFS是能够运行在通用硬件上的分布式文件系统", "correct": false}]}, {"id": 86, "type": "single", "chapter": "general", "stem": "以下关于类和单例对象的对比说法正确的是()。", "options": [{"id": "A", "text": "单例对象不可以继承，而类可以", "correct": false}, {"id": "B", "text": "单例对象不可以带参数，而类可以", "correct": true}, {"id": "C", "text": "单例对象不可以定义私有属性，而类可以", "correct": false}, {"id": "D", "text": "单例对象不可以定义方法，而类可以", "correct": false}]}, {"id": 87, "type": "single", "chapter": "bigdata", "stem": "下面描述正确的是：(  )。", "options": [{"id": "A", "text": "Hadoop和Spark不能部署在同一个集群中", "correct": false}, {"id": "B", "text": "Hadoop只包含了存储组件，不包含计算组件", "correct": false}, {"id": "C", "text": "Spark是一个分布式计算框架，可以和Hadoop组合使用", "correct": true}, {"id": "D", "text": "Spark和Hadoop是竞争关系，二者不能组合使用", "correct": false}]}, {"id": 88, "type": "single", "chapter": "search_knowledge", "stem": "下面关于爬山法的说法中错误的是：( )。", "options": [{"id": "A", "text": "爬山法是一种贪心算法。", "correct": false}, {"id": "B", "text": "爬山法是一种局部择优的方法。", "correct": false}, {"id": "C", "text": "爬山法没有能力从错误中或错误路径中恢复。", "correct": false}, {"id": "D", "text": "爬山法需要保存未选择路径的记录。", "correct": true}]}, {"id": 89, "type": "single", "chapter": "search_knowledge", "stem": "反演归结（消解）证明定理时，若当前归结式是（     ）时，则定理得证。", "options": [{"id": "A", "text": "永假式", "correct": false}, {"id": "B", "text": "包孕式", "correct": false}, {"id": "C", "text": "空子句", "correct": true}, {"id": "D", "text": "永真式", "correct": false}]}, {"id": 90, "type": "single", "chapter": "search_knowledge", "stem": "以下不是专家系统获取模式的是（    ）。", "options": [{"id": "A", "text": "自动知识获取", "correct": false}, {"id": "B", "text": "被动知识获取", "correct": true}, {"id": "C", "text": "半自动知识获取", "correct": false}, {"id": "D", "text": "非自动知识获取", "correct": false}]}, {"id": 91, "type": "single", "chapter": "general", "stem": "描述⼀种语⾔的途径不包括（  ）。", "options": [{"id": "A", "text": "穷举法", "correct": false}, {"id": "B", "text": "文法描述", "correct": false}, {"id": "C", "text": "⾃动机法", "correct": false}, {"id": "D", "text": "形式⽂法", "correct": true}]}, {"id": 92, "type": "single", "chapter": "ml_ai", "stem": "下列哪些属于循环神经网络（  ）。", "options": [{"id": "A", "text": "LeNet", "correct": false}, {"id": "B", "text": "GoogleNet", "correct": false}, {"id": "C", "text": "Bi-LSTM", "correct": true}, {"id": "D", "text": "BERT", "correct": false}]}, {"id": 93, "type": "single", "chapter": "python", "stem": "jupyter notebook运⾏本单元的快捷键（  ）。", "options": [{"id": "A", "text": "ALT+Enter", "correct": false}, {"id": "B", "text": "Ctrl+Enter", "correct": true}, {"id": "C", "text": "Shift+Enter", "correct": false}, {"id": "D", "text": "ESC+Enter", "correct": false}]}, {"id": 94, "type": "single", "chapter": "ml_ai", "stem": "Tensorboard日志书写器实例化语句（  ）。", "options": [{"id": "A", "text": "merged = tf.summary.merge_all()", "correct": true}, {"id": "B", "text": "降维算法", "correct": false}, {"id": "C", "text": "异常检测算法", "correct": false}, {"id": "D", "text": "分割算法", "correct": false}]}, {"id": 95, "type": "single", "chapter": "ml_ai", "stem": "下列哪个函数不可以做激活函数（  ）。", "options": [{"id": "A", "text": "y = tanh(x)", "correct": false}, {"id": "B", "text": "y = sin(x)", "correct": false}, {"id": "C", "text": "y = max(x,0)", "correct": false}, {"id": "D", "text": "y = 2x", "correct": true}]}, {"id": 96, "type": "single", "chapter": "ml_ai", "stem": "在数据挖掘中，将大数据集转换为保持原数据完整性的小数据集，这一过程称为（）。", "options": [{"id": "A", "text": "数据提取", "correct": false}, {"id": "B", "text": "数据变换", "correct": false}, {"id": "C", "text": "数据清理", "correct": false}, {"id": "D", "text": "数据归约", "correct": true}]}, {"id": 97, "type": "single", "chapter": "datastructure", "stem": "线性表是（）。", "options": [{"id": "A", "text": "一个有限序列，可以为空", "correct": true}, {"id": "B", "text": "一个无限序列，可以为空", "correct": false}, {"id": "C", "text": "一个无限序列，不可以为空", "correct": false}, {"id": "D", "text": "一个有限序列，不可以为空", "correct": false}]}, {"id": 98, "type": "single", "chapter": "datastructure", "stem": "设有两个长度都为n的单向链表，结点类型相同。若以h1为表头指针的链表是非循环的，以h2为表头指针的链表是循环的，则（）。", "options": [{"id": "A", "text": "循环链表要比非循环链表占用更多的内存空间", "correct": false}, {"id": "B", "text": "h1和h2是不同类型的变量", "correct": false}, {"id": "C", "text": "对于两个链表来说，删除第一个结点的操作，其时间复杂性都是O（1）", "correct": false}, {"id": "D", "text": "对于两个链表来说，删除最后一个结点的操作，其时间复杂性都是O（n）", "correct": true}]}, {"id": 99, "type": "single", "chapter": "hardware", "stem": "初始化后，总线的主控制器是（）。", "options": [{"id": "A", "text": "CPU", "correct": true}, {"id": "B", "text": "总线", "correct": false}, {"id": "C", "text": "DMA控制单元", "correct": false}, {"id": "D", "text": "总线控制单元", "correct": false}]}, {"id": 100, "type": "single", "chapter": "network", "stem": "在无线通信中由于（    ）的特性，信息传递会受到各种干扰，断接不可避免。", "options": [{"id": "A", "text": "数据流量", "correct": false}, {"id": "B", "text": "续航能力", "correct": false}, {"id": "C", "text": "传输载体", "correct": true}, {"id": "D", "text": "基础设施", "correct": false}]}, {"id": 101, "type": "multiple", "chapter": "computer", "stem": "Office办公自动化套件包括的组件有（ ）。", "options": [{"id": "A", "text": "Word", "correct": true}, {"id": "B", "text": "Excel", "correct": true}, {"id": "C", "text": "Powerpoint", "correct": true}, {"id": "D", "text": "Access", "correct": true}, {"id": "E", "text": "Publishe", "correct": true}]}, {"id": 102, "type": "multiple", "chapter": "general", "stem": "通常把矩形波高电平的（）与（）之比称为（）。", "options": [{"id": "A", "text": "时间", "correct": true}, {"id": "B", "text": "周期", "correct": true}, {"id": "C", "text": "占空比", "correct": true}, {"id": "D", "text": "动作", "correct": false}, {"id": "E", "text": "状态", "correct": false}]}, {"id": 103, "type": "multiple", "chapter": "project", "stem": "生命周期法（结构化开发）是（）的，由（）出发，按（）完成开发。", "options": [{"id": "A", "text": "自上而下", "correct": true}, {"id": "B", "text": "布局", "correct": false}, {"id": "C", "text": "全局", "correct": true}, {"id": "D", "text": "顺序", "correct": false}, {"id": "E", "text": "名称", "correct": true}]}, {"id": 104, "type": "multiple", "chapter": "image", "stem": "大数据中的非结构化数据包括 （ ）。", "options": [{"id": "A", "text": "图像", "correct": true}, {"id": "B", "text": "视频", "correct": true}, {"id": "C", "text": "语音", "correct": true}, {"id": "D", "text": "文本", "correct": true}, {"id": "E", "text": "整数", "correct": false}]}, {"id": 105, "type": "multiple", "chapter": "general", "stem": "⽀持向量机学习模型包括（   ）。", "options": [{"id": "A", "text": "线性可分⽀持向量机", "correct": true}, {"id": "B", "text": "线性⽀持", "correct": true}, {"id": "C", "text": "⾮线性⽀持向量机", "correct": true}, {"id": "D", "text": "硬间隔最⼤化", "correct": false}, {"id": "E", "text": "软间隔最⼤化", "correct": false}]}, {"id": 106, "type": "multiple", "chapter": "search_knowledge", "stem": "在数据不完备时，贝叶斯网络的参数学习方法有（     ）。", "options": [{"id": "A", "text": "高斯逼近", "correct": true}, {"id": "B", "text": "最大似然估计方法", "correct": false}, {"id": "C", "text": "蒙特卡洛方法", "correct": true}, {"id": "D", "text": "拉普拉斯近似", "correct": true}, {"id": "E", "text": "弗洛伊德算法", "correct": false}]}, {"id": 107, "type": "multiple", "chapter": "network", "stem": "设备在()的情况下，无线路由器默认都会进行（），在广播帧中包含了该路由器的（）。", "options": [{"id": "A", "text": "开启Wi-Fi", "correct": true}, {"id": "B", "text": "关闭Wi-Fi", "correct": false}, {"id": "C", "text": "SSID广播", "correct": true}, {"id": "D", "text": "MAC地址", "correct": true}, {"id": "E", "text": "IP地址", "correct": false}]}, {"id": 108, "type": "multiple", "chapter": "image", "stem": "下面哪一个是图像输入设备（ ）。", "options": [{"id": "A", "text": "数码摄像机", "correct": true}, {"id": "B", "text": "二维码扫描仪", "correct": true}, {"id": "C", "text": "照相机", "correct": true}, {"id": "D", "text": "鼠标", "correct": false}, {"id": "E", "text": "键盘", "correct": false}]}, {"id": 109, "type": "multiple", "chapter": "ethics", "stem": "教学方法论由教学方法（）、（）、（）、（）四个层面组成。", "options": [{"id": "A", "text": "指导思想", "correct": true}, {"id": "B", "text": "基本方法", "correct": true}, {"id": "C", "text": "具体方法", "correct": true}, {"id": "D", "text": "教学方式", "correct": true}, {"id": "E", "text": "教学结论", "correct": false}]}, {"id": 110, "type": "multiple", "chapter": "nlp", "stem": "自然语言处理的主要难点包括以下哪些（）。", "options": [{"id": "A", "text": "语言独立性", "correct": false}, {"id": "B", "text": "语言歧义性", "correct": true}, {"id": "C", "text": "多国语言", "correct": false}, {"id": "D", "text": "语境", "correct": true}, {"id": "E", "text": "方言", "correct": true}]}, {"id": 111, "type": "judgment", "chapter": "hardware", "stem": "总线是计算机各功能部件之间传送信息的公共通道（ ）。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 112, "type": "judgment", "chapter": "general", "stem": "完成指令的⼀个执行步骤所用的时间越短，执行速度越快。（    ）。", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 113, "type": "judgment", "chapter": "general", "stem": "先独立地测试每一个模块, 然后将所有这些模块连接到一起运行测试，这属于系统调试。", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 114, "type": "judgment", "chapter": "hardware", "stem": "组合逻辑电路的输出只取决于输入信号的现态。", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 115, "type": "judgment", "chapter": "general", "stem": "​沟通中存在的主要困难是团队成员互相很难吐露心声。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 116, "type": "judgment", "chapter": "ml_ai", "stem": "偏度是数据分布扁平程度的测度。", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 117, "type": "judgment", "chapter": "bigdata", "stem": "在Spark SQL编程中需要生成一个StreamingContext对象", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 118, "type": "judgment", "chapter": "general", "stem": "传感器是一种以一定精度将被测量转换为与之有确定对应关系、易于精确处理和测量的某种物理量，一般为电信号的测量部件或装置。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 119, "type": "judgment", "chapter": "nlp", "stem": "由于不同地方不同的文化差异，机器翻译有时会出现歧义。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 120, "type": "judgment", "chapter": "ml_ai", "stem": "神经网络算法是一种聚类数据挖掘算法。", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 121, "type": "single", "chapter": "ethics", "stem": "建立职业责任感的途径（ ）。", "options": [{"id": "A", "text": "强化职业观念", "correct": true}, {"id": "B", "text": "强化岗位规章制度", "correct": false}, {"id": "C", "text": "强调从业人员的具体职责", "correct": false}, {"id": "D", "text": "对从业人员的职业活动进行监督、评价", "correct": false}]}, {"id": 122, "type": "single", "chapter": "ethics", "stem": "在职业活动中,（  ）是为人之本。", "options": [{"id": "A", "text": "尊重别人", "correct": false}, {"id": "B", "text": "团结互助", "correct": false}, {"id": "C", "text": "学识渊博", "correct": false}, {"id": "D", "text": "诚实守信", "correct": true}]}, {"id": 123, "type": "single", "chapter": "general", "stem": "“一根筷子易折断，十根筷子抱成团”。说明（ ）。", "options": [{"id": "A", "text": "说明团结就是力量。", "correct": false}, {"id": "B", "text": "团结是个人生存发展的重要条件。", "correct": false}, {"id": "C", "text": "团结是为了实现团队目标奠定基础。", "correct": false}, {"id": "D", "text": "以上都对", "correct": true}]}, {"id": 124, "type": "single", "chapter": "general", "stem": "人工智能训练师是通过分析产品需求和运营异常数据，完成（  ）规则的制定，最终实现产品需求和运营稳定。", "options": [{"id": "A", "text": "数据标注", "correct": true}, {"id": "B", "text": "数据采集", "correct": false}, {"id": "C", "text": "数据分析", "correct": false}, {"id": "D", "text": "数据清洗", "correct": false}]}, {"id": 125, "type": "single", "chapter": "computer", "stem": "以下关于“回收站”的叙述中，不正确的是（  ）。", "options": [{"id": "A", "text": "放入回收站的信息可以恢复", "correct": false}, {"id": "B", "text": "回收站的容量可以调整", "correct": false}, {"id": "C", "text": "回收站是专门用于存放从软盘或硬盘上删除的信息", "correct": true}, {"id": "D", "text": "回收站是一个系统文件夹", "correct": false}]}, {"id": 126, "type": "single", "chapter": "computer", "stem": "发现病毒后，比较彻底的去除方式是(  )。", "options": [{"id": "A", "text": "用查毒软件处理", "correct": false}, {"id": "B", "text": "用杀毒软件处理", "correct": false}, {"id": "C", "text": "删除磁盘文件", "correct": false}, {"id": "D", "text": "格式化磁盘", "correct": true}]}, {"id": 127, "type": "single", "chapter": "computer", "stem": "单元格C1=A1+B1，将公式复制到C2时答案将为(   )。", "options": [{"id": "A", "text": "A1+B1", "correct": false}, {"id": "B", "text": "A2+B2", "correct": true}, {"id": "C", "text": "A1+B2", "correct": false}, {"id": "D", "text": "A2+B1", "correct": false}]}, {"id": 128, "type": "single", "chapter": "computer", "stem": "（   ）是⼈机交流的⼀种⽅式，⽤户对对话框进⾏设置，计算机就会执⾏相应的命令。", "options": [{"id": "A", "text": "对话框", "correct": true}, {"id": "B", "text": "窗口", "correct": false}, {"id": "C", "text": "列表框", "correct": false}, {"id": "D", "text": "按钮", "correct": false}]}, {"id": 129, "type": "single", "chapter": "law", "stem": "固定期限劳动合同，是指用人单位与劳动者约定合同（  ）时间的劳动合同。", "options": [{"id": "A", "text": "解除", "correct": false}, {"id": "B", "text": "续订", "correct": false}, {"id": "C", "text": "终止", "correct": true}, {"id": "D", "text": "中止", "correct": false}]}, {"id": 130, "type": "single", "chapter": "network", "stem": "根据《网络安全法》的规定，国家实行网络安全（   ）保护制度。", "options": [{"id": "A", "text": "结构", "correct": false}, {"id": "B", "text": "行政级别", "correct": false}, {"id": "C", "text": "分层", "correct": false}, {"id": "D", "text": "等级", "correct": true}]}, {"id": 131, "type": "single", "chapter": "ethics", "stem": "以下职能不属于研发团队的有哪些？（  ）。", "options": [{"id": "A", "text": "市场调研", "correct": false}, {"id": "B", "text": "结构设计", "correct": false}, {"id": "C", "text": "产品外观设计", "correct": false}, {"id": "D", "text": "物料运输", "correct": true}]}, {"id": 132, "type": "single", "chapter": "hardware", "stem": "一个1分4的数据分配器（解复用器）选择控制端的位宽为几位（）。", "options": [{"id": "A", "text": "1", "correct": false}, {"id": "B", "text": "8", "correct": false}, {"id": "C", "text": "4", "correct": false}, {"id": "D", "text": "2", "correct": true}]}, {"id": 133, "type": "single", "chapter": "hardware", "stem": "原码乘法时，符号位单独处理乘积的方式是（）。", "options": [{"id": "A", "text": "两个操作数中绝对值较大数的符号", "correct": false}, {"id": "B", "text": "两个操作数符号相“与\"", "correct": false}, {"id": "C", "text": "两个操作数符号相“或\"", "correct": false}, {"id": "D", "text": "两个操作数符号相“异或”", "correct": true}]}, {"id": 134, "type": "single", "chapter": "hardware", "stem": "8位无符号阵列乘法器需要多少个全加器（）。", "options": [{"id": "A", "text": "8", "correct": false}, {"id": "B", "text": "56", "correct": true}, {"id": "C", "text": "64", "correct": false}, {"id": "D", "text": "32", "correct": false}]}, {"id": 135, "type": "single", "chapter": "hardware", "stem": "DS1302写地址和数据时，RST信号必须拉（ ）。", "options": [{"id": "A", "text": "高低都不行", "correct": false}, {"id": "B", "text": "高", "correct": true}, {"id": "C", "text": "低", "correct": false}, {"id": "D", "text": "高低都行", "correct": false}]}, {"id": 136, "type": "single", "chapter": "hardware", "stem": "8259接口芯片有（ ）个地址。", "options": [{"id": "A", "text": "1", "correct": false}, {"id": "B", "text": "8", "correct": false}, {"id": "C", "text": "4", "correct": false}, {"id": "D", "text": "2", "correct": true}]}, {"id": 137, "type": "single", "chapter": "project", "stem": "不是项目的三重约束的是（）。", "options": [{"id": "A", "text": "时间", "correct": false}, {"id": "B", "text": "性能", "correct": false}, {"id": "C", "text": "费用", "correct": false}, {"id": "D", "text": "质量", "correct": true}]}, {"id": 138, "type": "single", "chapter": "computer", "stem": "（）是一份正式认可项目存在的文件，并为项目目标和管理提供方向。", "options": [{"id": "A", "text": "项目章程", "correct": true}, {"id": "B", "text": "合同", "correct": false}, {"id": "C", "text": "商业论证", "correct": false}, {"id": "D", "text": "项目管理计划", "correct": false}]}, {"id": 139, "type": "single", "chapter": "general", "stem": "（）是对一组满足需求固有特性的度量。", "options": [{"id": "A", "text": "质量", "correct": true}, {"id": "B", "text": "需求一致性", "correct": false}, {"id": "C", "text": "适用性", "correct": false}, {"id": "D", "text": "可靠性", "correct": false}]}, {"id": 140, "type": "single", "chapter": "project", "stem": "通过估算最小任务的成本，再把所有任务的成本向上逐渐加总，从而计算出整个项目的总成本，这种方法是（）。", "options": [{"id": "A", "text": "专家判断法", "correct": false}, {"id": "B", "text": "自下而上估算法", "correct": true}, {"id": "C", "text": "自上而下估算法", "correct": false}, {"id": "D", "text": "参数模型估算法", "correct": false}]}, {"id": 141, "type": "single", "chapter": "general", "stem": "面对面的互动中，大多数信息是通过（）传递的。", "options": [{"id": "A", "text": "语音语调", "correct": false}, {"id": "B", "text": "所说的话", "correct": false}, {"id": "C", "text": "肢体语言", "correct": true}, {"id": "D", "text": "所在位置", "correct": false}]}, {"id": 142, "type": "single", "chapter": "general", "stem": "不属于联机实时处理方式的情况是(     )。", "options": [{"id": "A", "text": "固定周期的数据处理", "correct": true}, {"id": "B", "text": "数据收集费用较高的数据处理", "correct": false}, {"id": "C", "text": "负荷易产生波动的数据处理", "correct": false}, {"id": "D", "text": "需要反应迅速的数据处理", "correct": false}]}, {"id": 143, "type": "single", "chapter": "python", "stem": "Python3.x环境创建Python脚本文件时，需要将文件编码格式设置为（    ）", "options": [{"id": "A", "text": "ANSI", "correct": false}, {"id": "B", "text": "UTF-8", "correct": true}, {"id": "C", "text": "UNICODE", "correct": false}, {"id": "D", "text": "GBK", "correct": false}]}, {"id": 144, "type": "single", "chapter": "python", "stem": "已知函数调用Fun(**a)，则a可能是（    ）。", "options": [{"id": "A", "text": "元组", "correct": false}, {"id": "B", "text": "集合", "correct": false}, {"id": "C", "text": "列表", "correct": false}, {"id": "D", "text": "字典", "correct": true}]}, {"id": 145, "type": "single", "chapter": "image", "stem": "一幅灰度图像的浅色背景上有一个深色的圆环，如果要将圆环变细，可使用：(  )。", "options": [{"id": "A", "text": "中值滤波器", "correct": false}, {"id": "B", "text": "最大值滤波器", "correct": true}, {"id": "C", "text": "最小值滤波器", "correct": false}, {"id": "D", "text": "中点滤波器", "correct": false}]}, {"id": 146, "type": "single", "chapter": "image", "stem": "灰度直方图与图像是(  )的关系。", "options": [{"id": "A", "text": "一对多", "correct": true}, {"id": "B", "text": "一对一", "correct": false}, {"id": "C", "text": "多对一", "correct": false}, {"id": "D", "text": "都不对", "correct": false}]}, {"id": 147, "type": "single", "chapter": "image", "stem": "实现无缝图像拼接,对图像拼接图像的要求是(  )。  .", "options": [{"id": "A", "text": "不同传感器", "correct": false}, {"id": "B", "text": "有重叠区域", "correct": true}, {"id": "C", "text": "不同时间", "correct": false}, {"id": "D", "text": "同视角", "correct": false}]}, {"id": 148, "type": "single", "chapter": "bigdata", "stem": "以下关于数据分发中间件Kafka的说法不正确的是：(  )。", "options": [{"id": "A", "text": "Kafka将Topic分成一个或者多个Partition", "correct": false}, {"id": "B", "text": "每条发布到Kafka集群的消息都属于一个主题（topic）", "correct": false}, {"id": "C", "text": "Kafka主要是使用c++、Java语言实现的", "correct": true}, {"id": "D", "text": "Kafka是一个基于发布/订阅的消息系统", "correct": false}]}, {"id": 149, "type": "single", "chapter": "general", "stem": "高阶函数是指()。", "options": [{"id": "A", "text": "函数参数为函数或返回结果为函数的函数", "correct": true}, {"id": "B", "text": "执行时间长的函数", "correct": false}, {"id": "C", "text": "在程序中应该首先被定义的函数", "correct": false}, {"id": "D", "text": "将函数作为参数，并返回结果为函数的函数", "correct": false}]}, {"id": 150, "type": "single", "chapter": "bigdata", "stem": "判段HDFS是否启动成功，可以通过哪个命令()。", "options": [{"id": "A", "text": "hdfs", "correct": false}, {"id": "B", "text": "spark", "correct": false}, {"id": "C", "text": "jps", "correct": true}, {"id": "D", "text": "start-dfs", "correct": false}]}, {"id": 151, "type": "single", "chapter": "bigdata", "stem": "关于Shark，下面描述正确的是：(  )。", "options": [{"id": "A", "text": "Shark提供了类似Pig的功能", "correct": false}, {"id": "B", "text": "Shark把SQL语句转换成MapReduce作业", "correct": false}, {"id": "C", "text": "Shark重用了Hive中的HiveQL解析、逻辑执行计划翻译、执行计划优化等逻辑", "correct": true}, {"id": "D", "text": "Shark的性能比Hive差很多", "correct": false}]}, {"id": 152, "type": "single", "chapter": "search_knowledge", "stem": "搜索可以分为盲目搜索和（   ）。", "options": [{"id": "A", "text": "大数据搜索", "correct": false}, {"id": "B", "text": "精确搜索", "correct": false}, {"id": "C", "text": "模糊搜索", "correct": false}, {"id": "D", "text": "启发式搜索", "correct": true}]}, {"id": 153, "type": "single", "chapter": "search_knowledge", "stem": "称为除了问题本身的定义之外，使用问题特定知识的搜索策略被认为是（    ）。", "options": [{"id": "A", "text": "极小极大搜索算法", "correct": false}, {"id": "B", "text": "深度优先搜索", "correct": false}, {"id": "C", "text": "蒙特卡洛树搜索", "correct": false}, {"id": "D", "text": "启发式算法", "correct": true}]}, {"id": 154, "type": "single", "chapter": "search_knowledge", "stem": "不是专家系统的特点的是（    ）。", "options": [{"id": "A", "text": "交互性", "correct": false}, {"id": "B", "text": "灵活性", "correct": false}, {"id": "C", "text": "透明性", "correct": false}, {"id": "D", "text": "主动性", "correct": true}]}, {"id": 155, "type": "single", "chapter": "nlp", "stem": "然语⾔处理的缩写是（   ）。", "options": [{"id": "A", "text": "NLP", "correct": true}, {"id": "B", "text": "NLL", "correct": false}, {"id": "C", "text": "NLA", "correct": false}, {"id": "D", "text": "NLB", "correct": false}]}, {"id": 156, "type": "single", "chapter": "nlp", "stem": "语音识别常用的神经网络不包括(   )。", "options": [{"id": "A", "text": "反向传播(BP)网络", "correct": true}, {"id": "B", "text": "径向基函数(RBF)网络", "correct": false}, {"id": "C", "text": "卷积神经网络", "correct": false}, {"id": "D", "text": "小波网络", "correct": false}]}, {"id": 157, "type": "single", "chapter": "python", "stem": "启动jupyter notebook后，新建python文件的方法（  ）", "options": [{"id": "A", "text": "new->python3.0", "correct": true}, {"id": "B", "text": "new->textfile", "correct": false}, {"id": "C", "text": "new->folder", "correct": false}, {"id": "D", "text": "new->termial", "correct": false}]}, {"id": 158, "type": "single", "chapter": "ml_ai", "stem": "逻辑回归其实是⼀个（   ）。", "options": [{"id": "A", "text": "分类算法", "correct": true}, {"id": "B", "text": "回归算法", "correct": false}, {"id": "C", "text": "降维算法", "correct": false}, {"id": "D", "text": "无监督学习算法", "correct": false}]}, {"id": 159, "type": "single", "chapter": "ml_ai", "stem": "Tensorboard汇总记录节点语句（  ）。", "options": [{"id": "A", "text": "merged = tf.summary.merge_all()", "correct": true}, {"id": "B", "text": "summary = sess.run(merged)", "correct": false}, {"id": "C", "text": "summary_writer = tf.summary.FileWriter(logdir, graph=sess.graph)", "correct": false}, {"id": "D", "text": "add_summary(summary, global_step=i)", "correct": false}]}, {"id": 160, "type": "single", "chapter": "ml_ai", "stem": "可以把高维的数据降到低维，方便可视化和处理的是（  。", "options": [{"id": "A", "text": "聚类算法", "correct": false}, {"id": "B", "text": "降维算法", "correct": true}, {"id": "C", "text": "异常检测算法", "correct": false}, {"id": "D", "text": "分割算法", "correct": false}]}, {"id": 161, "type": "multiple", "chapter": "computer", "stem": "在Access数据库中，关系选项包括（  ）。", "options": [{"id": "A", "text": "参照完整性", "correct": true}, {"id": "B", "text": "提高查询", "correct": false}, {"id": "C", "text": "级联更新", "correct": true}, {"id": "D", "text": "级联删除", "correct": true}, {"id": "E", "text": "删除查询", "correct": false}]}, {"id": 162, "type": "multiple", "chapter": "hardware", "stem": "方波的频率与RC充放电()有关，RC乘积越()，方波的频率越()。", "options": [{"id": "A", "text": "时间常数", "correct": true}, {"id": "B", "text": "大", "correct": true}, {"id": "C", "text": "高", "correct": true}, {"id": "D", "text": "小", "correct": false}, {"id": "E", "text": "没有", "correct": false}]}, {"id": 163, "type": "multiple", "chapter": "project", "stem": "生命周期法可以分为三个阶段：（）、系统设计和（）。也可以分为五个阶段：（）、系统分析、（）、系统实施、（）。", "options": [{"id": "A", "text": "系统分析", "correct": true}, {"id": "B", "text": "系统实施", "correct": true}, {"id": "C", "text": "总体规划", "correct": true}, {"id": "D", "text": "系统设计", "correct": true}, {"id": "E", "text": "运行维护", "correct": true}]}, {"id": 164, "type": "multiple", "chapter": "general", "stem": "大数据中的半结构化数据包括 （ ）。", "options": [{"id": "A", "text": "HTML", "correct": true}, {"id": "B", "text": "办公文档", "correct": false}, {"id": "C", "text": "电子邮件", "correct": true}, {"id": "D", "text": "XML", "correct": true}, {"id": "E", "text": "文本", "correct": false}]}, {"id": 165, "type": "multiple", "chapter": "ml_ai", "stem": "常见的核函数包括（  ）。", "options": [{"id": "A", "text": "线性核", "correct": true}, {"id": "B", "text": "Sigmoid核", "correct": true}, {"id": "C", "text": "多项性核", "correct": true}, {"id": "D", "text": "高斯核", "correct": true}, {"id": "E", "text": "拉普拉斯核", "correct": true}]}, {"id": 166, "type": "multiple", "chapter": "search_knowledge", "stem": "在数据不完备时，贝叶斯网络的参数学习方法有（     ）。", "options": [{"id": "A", "text": "高斯逼近", "correct": true}, {"id": "B", "text": "最大似然估计方法", "correct": false}, {"id": "C", "text": "蒙特卡洛方法", "correct": true}, {"id": "D", "text": "拉普拉斯近似", "correct": true}, {"id": "E", "text": "弗洛伊德算法", "correct": false}]}, {"id": 167, "type": "multiple", "chapter": "general", "stem": "（）通过发送和接收具有纳秒或纳秒级以下的（）来传输数据，从而具有（）的带宽。", "options": [{"id": "A", "text": "超宽带技术", "correct": true}, {"id": "B", "text": "极窄脉冲", "correct": true}, {"id": "C", "text": "极宽脉冲", "correct": false}, {"id": "D", "text": "GHz量级", "correct": true}, {"id": "E", "text": "一般量级", "correct": false}]}, {"id": 168, "type": "multiple", "chapter": "ethics", "stem": "多模态智能交互技术包括（ ）交互方式传递信息。", "options": [{"id": "A", "text": "眼神", "correct": true}, {"id": "B", "text": "手势", "correct": true}, {"id": "C", "text": "语音", "correct": true}, {"id": "D", "text": "表情", "correct": true}, {"id": "E", "text": "思想", "correct": false}]}, {"id": 169, "type": "multiple", "chapter": "ethics", "stem": "关于交互设计模式，以下说法正确的是：（）。", "options": [{"id": "A", "text": "模式捕捉了良好设计中不变的特性", "correct": true}, {"id": "B", "text": "设计模式能够帮助提供有价值、有用的设计思路", "correct": true}, {"id": "C", "text": "交互设计模式可以拿来即用，不需要修改", "correct": false}, {"id": "D", "text": "模式在交互设计中的应用还处于起步阶段", "correct": true}, {"id": "E", "text": "交互设计模式种类目前较少", "correct": false}]}, {"id": 170, "type": "multiple", "chapter": "ethics", "stem": "练习法是学生在教师的指导下（）、（）、形成技能技巧的方法。", "options": [{"id": "A", "text": "巩固知识", "correct": true}, {"id": "B", "text": "预习", "correct": false}, {"id": "C", "text": "运用知识", "correct": true}, {"id": "D", "text": "复习", "correct": false}, {"id": "E", "text": "完成作业", "correct": false}]}, {"id": 171, "type": "judgment", "chapter": "computer", "stem": "裸机是指刚刚装好了操作系统,其它软件都没有安装的计算机（ ）。", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 172, "type": "judgment", "chapter": "hardware", "stem": "PU的性能取决于主频、CPI、指令条数（    ）。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 173, "type": "judgment", "chapter": "project", "stem": "实验原型法是建立一个真实系统的模型，先由局部模型开始不断地进行实验和改进，最后得到整个系统的模型。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 174, "type": "judgment", "chapter": "hardware", "stem": "74LS138集成芯片可以实现任意变量的逻辑函数。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 175, "type": "judgment", "chapter": "ethics", "stem": "执行力的定义是实现目标任务的实际程度。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 176, "type": "judgment", "chapter": "datastructure", "stem": "数据结构用来定义数据项之间的组合关系。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 177, "type": "judgment", "chapter": "python", "stem": "re.match(r'py$','puppy')返回的是一个Match对象。", "options": [{"id": "T", "text": "对", "correct": false}, {"id": "F", "text": "错", "correct": true}]}, {"id": 178, "type": "judgment", "chapter": "image", "stem": "本课程研究的图像是二维的，是三维景物在二维平面上的投影。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 179, "type": "judgment", "chapter": "ml_ai", "stem": "某组数据的峰态系数小于0，则并表明该组数据为扁平分布或者平峰分布。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}, {"id": 180, "type": "judgment", "chapter": "bigdata", "stem": "Topic是一种异步通信机制。", "options": [{"id": "T", "text": "对", "correct": true}, {"id": "F", "text": "错", "correct": false}]}]};
+  </script>
+  <script>
+const STORAGE_KEY = 'ai_trainer_wrong_questions';
+
+let allQuestions = [];
+let chapters = [];
+let chapterMap = {};
+let currentQuestions = [];
+let studyQuestions = [];
+let studyIndex = 0;
+let checkedMap = {}; // qid -> { correct: bool, userAnswer: [] }
+let mode = 'practice';
+
+const TYPE_LABELS = {
+  single: '单选',
+  multiple: '多选',
+  judgment: '判断',
+};
+
+async function loadQuestionsData() {
+  if (window.QUESTIONS_DATA) {
+    return window.QUESTIONS_DATA;
+  }
+  const res = await fetch('questions.json');
+  return res.json();
+}
+
+async function init() {
+  try {
+    const data = await loadQuestionsData();
+    allQuestions = data.questions;
+    chapters = data.chapters || [];
+    chapterMap = Object.fromEntries(chapters.map((c) => [c.id, c.name]));
+
+    document.getElementById('page-title').textContent = data.title;
+    document.getElementById('page-subtitle').textContent =
+      `共 ${data.total} 道题 · ${chapters.length} 个章节 · 单选/多选/判断`;
+
+    populateChapterFilters();
+    applyFilter();
+    applyStudyFilter();
+    updateWrongBadge();
+  } catch (e) {
+    document.getElementById('question-list').innerHTML =
+      '<div class="loading">加载题目失败，请确保 questions.js 存在。<br>可运行 python3 parse_docx.py 重新生成。</div>';
+  }
+}
+
+function populateChapterFilters() {
+  const options =
+    '<option value="all">全部章节</option>' +
+    chapters
+      .map((c) => {
+        const count = allQuestions.filter((q) => q.chapter === c.id).length;
+        return `<option value="${c.id}">${c.name}（${count}）</option>`;
+      })
+      .join('');
+
+  document.getElementById('chapter-filter').innerHTML = options;
+  document.getElementById('study-chapter-filter').innerHTML = options;
+}
+
+function getChapterName(id) {
+  return chapterMap[id] || '综合其他';
+}
+
+function getWrongBook() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function saveWrongBook(book) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(book));
+  updateWrongBadge();
+}
+
+function addToWrongBook(question, userAnswer) {
+  const book = getWrongBook();
+  const key = String(question.id);
+  const correctIds = question.options.filter((o) => o.correct).map((o) => o.id);
+
+  if (!book[key]) {
+    book[key] = {
+      questionId: question.id,
+      wrongCount: 0,
+      lastWrongAt: null,
+      lastUserAnswer: null,
+    };
+  }
+  book[key].wrongCount += 1;
+  book[key].lastWrongAt = Date.now();
+  book[key].lastUserAnswer = userAnswer;
+  book[key].correctIds = correctIds;
+  saveWrongBook(book);
+}
+
+function clearWrongBook() {
+  if (confirm('确定清空全部错题集吗？')) {
+    localStorage.removeItem(STORAGE_KEY);
+    updateWrongBadge();
+    if (mode === 'wrongbook') renderWrongBook();
+  }
+}
+
+function updateWrongBadge() {
+  const count = Object.keys(getWrongBook()).length;
+  const badge = document.getElementById('wrong-badge');
+  if (count > 0) {
+    badge.textContent = count;
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+}
+
+function applyFilter() {
+  const chapterFilter = document.getElementById('chapter-filter').value;
+  const typeFilter = document.getElementById('type-filter').value;
+  const orderFilter = document.getElementById('order-filter').value;
+  const countFilter = document.getElementById('count-filter').value;
+
+  let filtered = [...allQuestions];
+
+  if (chapterFilter !== 'all') {
+    filtered = filtered.filter((q) => q.chapter === chapterFilter);
+  }
+  if (typeFilter !== 'all') {
+    filtered = filtered.filter((q) => q.type === typeFilter);
+  }
+
+  if (orderFilter === 'random') {
+    filtered = shuffle(filtered);
+  } else if (orderFilter === 'id-desc') {
+    filtered.sort((a, b) => b.id - a.id);
+  } else {
+    filtered.sort((a, b) => a.id - b.id);
+  }
+
+  if (countFilter !== 'all') {
+    filtered = filtered.slice(0, parseInt(countFilter, 10));
+  }
+
+  currentQuestions = filtered;
+  checkedMap = {};
+  renderQuestions();
+  updateStats();
+}
+
+function applyStudyFilter() {
+  const chapterFilter = document.getElementById('study-chapter-filter').value;
+  const typeFilter = document.getElementById('study-type-filter').value;
+
+  let filtered = [...allQuestions];
+  if (chapterFilter !== 'all') {
+    filtered = filtered.filter((q) => q.chapter === chapterFilter);
+  }
+  if (typeFilter !== 'all') {
+    filtered = filtered.filter((q) => q.type === typeFilter);
+  }
+  filtered.sort((a, b) => a.id - b.id);
+
+  studyQuestions = filtered;
+  studyIndex = 0;
+  document.getElementById('study-stat-total').textContent = studyQuestions.length;
+
+  const viewMode = document.getElementById('study-view-mode').value;
+  if (viewMode === 'card') {
+    renderStudyCard();
+  } else {
+    renderStudyList();
+  }
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderQuestions() {
+  const list = document.getElementById('question-list');
+  if (currentQuestions.length === 0) {
+    list.innerHTML =
+      '<div class="empty-state"><div class="icon">📝</div><p>没有符合条件的题目</p></div>';
+    return;
+  }
+
+  list.innerHTML = currentQuestions
+    .map((q, idx) => renderQuestionCard(q, idx, false))
+    .join('');
+
+  bindQuestionEvents(list);
+}
+
+function renderQuestionCard(q, idx, showAnswer) {
+  const isMultiple = q.type === 'multiple';
+  const inputType = isMultiple ? 'checkbox' : 'radio';
+  const name = `q-${q.id}`;
+  const isChecked = !!checkedMap[q.id];
+  const chapterTag = getChapterName(q.chapter);
+
+  const optionsHtml = q.options
+    .map((opt) => {
+      let cls = 'option';
+      if (showAnswer && opt.correct) cls += ' correct-answer';
+      if (isChecked) cls += ' disabled';
+
+      return `
+        <label class="${cls}" data-qid="${q.id}" data-oid="${opt.id}">
+          <input type="${inputType}" name="${name}" value="${opt.id}" ${isChecked ? 'disabled' : ''} />
+          <span class="option-label">${opt.id}.</span>
+          <span class="option-text">${escapeHtml(opt.text)}</span>
+        </label>`;
+    })
+    .join('');
+
+  const confirmBtn =
+    isMultiple && !isChecked
+      ? `<button class="btn btn-primary btn-confirm" data-qid="${q.id}">确认答案</button>`
+      : '';
+
+  return `
+    <div class="question-card unchecked" id="card-${q.id}" data-id="${q.id}">
+      <div class="q-header">
+        <span class="q-num">第 ${idx + 1} 题（原题号 ${q.id}）</span>
+        <span class="q-chapter">${escapeHtml(chapterTag)}</span>
+        <span class="q-type ${q.type}">${TYPE_LABELS[q.type]}</span>
+      </div>
+      <div class="q-stem">${escapeHtml(q.stem)}</div>
+      <div class="options">${optionsHtml}</div>
+      ${confirmBtn ? `<div class="confirm-row">${confirmBtn}</div>` : ''}
+      <div class="result-badge" id="result-${q.id}"></div>
+    </div>`;
+}
+
+function bindQuestionEvents(container) {
+  container.querySelectorAll('.option').forEach((el) => {
+    const qid = Number(el.dataset.qid);
+    const q = currentQuestions.find((x) => x.id === qid);
+    if (!q || checkedMap[qid]) return;
+
+    el.addEventListener('click', (e) => {
+      if (checkedMap[qid]) return;
+      const input = el.querySelector('input');
+      if (e.target === input) return;
+      if (input.type === 'radio') {
+        input.checked = true;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      } else {
+        input.checked = !input.checked;
+        syncOptionStyle(el.closest('.options'));
+      }
+    });
+
+    el.querySelector('input').addEventListener('change', () => {
+      if (checkedMap[qid]) return;
+      syncOptionStyle(el.closest('.options'));
+      if (q.type !== 'multiple') {
+        checkQuestion(qid);
+      }
+    });
+  });
+
+  container.querySelectorAll('.btn-confirm').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      checkQuestion(Number(btn.dataset.qid));
+    });
+  });
+}
+
+function syncOptionStyle(optionsEl) {
+  optionsEl.querySelectorAll('.option').forEach((opt) => {
+    opt.classList.toggle('selected', opt.querySelector('input').checked);
+  });
+}
+
+function getUserAnswer(qid) {
+  const inputs = document.querySelectorAll(`input[name="q-${qid}"]:checked`);
+  return Array.from(inputs)
+    .map((i) => i.value)
+    .sort();
+}
+
+function getCorrectAnswer(q) {
+  return q.options
+    .filter((o) => o.correct)
+    .map((o) => o.id)
+    .sort();
+}
+
+function formatAnswer(q, ids) {
+  return ids
+    .map((id) => {
+      const opt = q.options.find((o) => o.id === id);
+      return opt ? `${id}. ${opt.text}` : id;
+    })
+    .join('；');
+}
+
+function checkQuestion(qid) {
+  if (checkedMap[qid]) return;
+
+  const q = currentQuestions.find((x) => x.id === qid);
+  if (!q) return;
+
+  const userAns = getUserAnswer(qid);
+  if (userAns.length === 0) {
+    if (q.type === 'multiple') {
+      alert('请至少选择一个选项');
+    }
+    return;
+  }
+
+  const correctAns = getCorrectAnswer(q);
+  const isCorrect = arraysEqual(userAns, correctAns);
+
+  checkedMap[qid] = { correct: isCorrect, userAnswer: userAns };
+  revealQuestionResult(q, userAns, isCorrect);
+  updateStats();
+}
+
+function revealQuestionResult(q, userAns, isCorrect) {
+  const card = document.getElementById(`card-${q.id}`);
+  const resultEl = document.getElementById(`result-${q.id}`);
+  const correctAns = getCorrectAnswer(q);
+
+  card.querySelectorAll('.option').forEach((opt) => {
+    opt.classList.add('disabled');
+    const oid = opt.dataset.oid;
+    const input = opt.querySelector('input');
+    input.disabled = true;
+
+    if (q.options.find((o) => o.id === oid)?.correct) {
+      opt.classList.add('correct-answer');
+    }
+    if (input.checked && !q.options.find((o) => o.id === oid)?.correct) {
+      opt.classList.add('wrong-answer');
+    }
+  });
+
+  const confirmBtn = card.querySelector('.btn-confirm');
+  if (confirmBtn) confirmBtn.remove();
+
+  card.classList.remove('unchecked');
+  card.classList.add(isCorrect ? 'correct' : 'wrong');
+  resultEl.className = `result-badge show ${isCorrect ? 'correct' : 'wrong'}`;
+
+  if (isCorrect) {
+    resultEl.textContent = '✓ 回答正确';
+  } else {
+    resultEl.textContent = `✗ 回答错误。你的答案：${formatAnswer(q, userAns)}；正确答案：${formatAnswer(q, correctAns)}`;
+    addToWrongBook(q, userAns);
+  }
+}
+
+function showSummary() {
+  const total = currentQuestions.length;
+  const answered = Object.keys(checkedMap).length;
+  let correct = 0;
+  let wrong = 0;
+
+  Object.values(checkedMap).forEach((v) => {
+    if (v.correct) correct++;
+    else wrong++;
+  });
+
+  const modal = document.getElementById('summary-modal');
+  document.getElementById('summary-score').textContent =
+    answered > 0 ? `${Math.round((correct / answered) * 100)}%` : '—';
+  document.getElementById('summary-detail').textContent =
+    `共 ${total} 题 · 已答 ${answered} · 正确 ${correct} · 错误 ${wrong} · 未答 ${total - answered}`;
+  modal.classList.add('show');
+}
+
+function resetPractice() {
+  checkedMap = {};
+  document.getElementById('summary-modal').classList.remove('show');
+  applyFilter();
+}
+
+/* ---------- 背题模式 ---------- */
+
+function renderStudyCard() {
+  document.getElementById('study-card-view').classList.remove('hidden');
+  document.getElementById('study-list-view').classList.add('hidden');
+
+  const cardEl = document.getElementById('study-card');
+  const progressEl = document.getElementById('study-progress');
+
+  if (studyQuestions.length === 0) {
+    cardEl.innerHTML =
+      '<div class="empty-state"><div class="icon">📖</div><p>没有符合条件的题目</p></div>';
+    progressEl.textContent = '0 / 0';
+    return;
+  }
+
+  if (studyIndex >= studyQuestions.length) studyIndex = studyQuestions.length - 1;
+  if (studyIndex < 0) studyIndex = 0;
+
+  const q = studyQuestions[studyIndex];
+  progressEl.textContent = `${studyIndex + 1} / ${studyQuestions.length}`;
+
+  cardEl.innerHTML = `
+    <div class="question-card study-card">
+      <div class="q-header">
+        <span class="q-num">题号 ${q.id}</span>
+        <span class="q-chapter">${escapeHtml(getChapterName(q.chapter))}</span>
+        <span class="q-type ${q.type}">${TYPE_LABELS[q.type]}</span>
+      </div>
+      <div class="q-stem">${escapeHtml(q.stem)}</div>
+      <div class="options">
+        ${q.options
+          .map(
+            (opt) => `
+          <div class="option study-option ${opt.correct ? 'correct-answer' : ''}">
+            <span class="option-label">${opt.id}.</span>
+            <span class="option-text">${escapeHtml(opt.text)}</span>
+            ${opt.correct ? '<span class="answer-tag">✓ 正确答案</span>' : ''}
+          </div>`
+          )
+          .join('')}
+      </div>
+      <div class="study-answer-summary">
+        正确答案：${formatAnswer(q, getCorrectAnswer(q))}
+      </div>
+    </div>`;
+}
+
+function renderStudyList() {
+  document.getElementById('study-card-view').classList.add('hidden');
+  document.getElementById('study-list-view').classList.remove('hidden');
+
+  const listEl = document.getElementById('study-list-view');
+
+  if (studyQuestions.length === 0) {
+    listEl.innerHTML =
+      '<div class="empty-state"><div class="icon">📖</div><p>没有符合条件的题目</p></div>';
+    return;
+  }
+
+  listEl.innerHTML = studyQuestions
+    .map(
+      (q, idx) => `
+    <div class="question-card study-card">
+      <div class="q-header">
+        <span class="q-num">${idx + 1}. 题号 ${q.id}</span>
+        <span class="q-chapter">${escapeHtml(getChapterName(q.chapter))}</span>
+        <span class="q-type ${q.type}">${TYPE_LABELS[q.type]}</span>
+      </div>
+      <div class="q-stem">${escapeHtml(q.stem)}</div>
+      <div class="options">
+        ${q.options
+          .map(
+            (opt) => `
+          <div class="option study-option ${opt.correct ? 'correct-answer' : ''}">
+            <span class="option-label">${opt.id}.</span>
+            <span class="option-text">${escapeHtml(opt.text)}</span>
+            ${opt.correct ? '<span class="answer-tag">✓</span>' : ''}
+          </div>`
+          )
+          .join('')}
+      </div>
+    </div>`
+    )
+    .join('');
+}
+
+function studyPrev() {
+  if (studyIndex > 0) {
+    studyIndex--;
+    renderStudyCard();
+  }
+}
+
+function studyNext() {
+  if (studyIndex < studyQuestions.length - 1) {
+    studyIndex++;
+    renderStudyCard();
+  }
+}
+
+/* ---------- 错题集 ---------- */
+
+function renderWrongBook() {
+  const book = getWrongBook();
+  const ids = Object.keys(book).map(Number).sort((a, b) => a - b);
+  const list = document.getElementById('wrong-list');
+
+  if (ids.length === 0) {
+    list.innerHTML =
+      '<div class="empty-state"><div class="icon">🎉</div><p>暂无错题，继续保持！</p></div>';
+    return;
+  }
+
+  list.innerHTML = ids
+    .map((id) => {
+      const q = allQuestions.find((x) => x.id === id);
+      if (!q) return '';
+      const entry = book[String(id)];
+      const correctAns = getCorrectAnswer(q);
+      const userAns = entry.lastUserAnswer || [];
+
+      return `
+      <div class="wrong-item" data-id="${id}">
+        <div class="meta">
+          <span>题号 ${id} · ${getChapterName(q.chapter)} · ${TYPE_LABELS[q.type]} · 错 ${entry.wrongCount} 次</span>
+          <button class="btn btn-outline btn-sm" onclick="practiceOne(${id})">重做</button>
+        </div>
+        <div class="stem">${escapeHtml(q.stem)}</div>
+        <div class="answer-info">
+          <div class="your-ans">你的答案：${userAns.length ? formatAnswer(q, userAns) : '未作答'}</div>
+          <div class="correct-ans">正确答案：${formatAnswer(q, correctAns)}</div>
+        </div>
+      </div>`;
+    })
+    .join('');
+}
+
+function practiceOne(id) {
+  switchTab('practice');
+  document.getElementById('chapter-filter').value = 'all';
+  document.getElementById('type-filter').value = 'all';
+  document.getElementById('order-filter').value = 'id-asc';
+  document.getElementById('count-filter').value = 'all';
+
+  currentQuestions = allQuestions.filter((q) => q.id === id);
+  checkedMap = {};
+  renderQuestions();
+  updateStats();
+  document.getElementById(`card-${id}`)?.scrollIntoView({ behavior: 'smooth' });
+}
+
+function practiceWrongBook() {
+  const book = getWrongBook();
+  const ids = new Set(Object.keys(book).map(Number));
+  if (ids.size === 0) {
+    alert('错题集为空');
+    return;
+  }
+  switchTab('practice');
+  document.getElementById('chapter-filter').value = 'all';
+  document.getElementById('type-filter').value = 'all';
+  document.getElementById('order-filter').value = 'random';
+  document.getElementById('count-filter').value = 'all';
+  currentQuestions = shuffle(allQuestions.filter((q) => ids.has(q.id)));
+  checkedMap = {};
+  renderQuestions();
+  updateStats();
+}
+
+function switchTab(tab) {
+  mode = tab;
+  document.querySelectorAll('.tab-btn').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.tab === tab);
+  });
+  document.getElementById('practice-panel').classList.toggle('hidden', tab !== 'practice');
+  document.getElementById('study-panel').classList.toggle('hidden', tab !== 'study');
+  document.getElementById('wrongbook-panel').classList.toggle('hidden', tab !== 'wrongbook');
+
+  if (tab === 'wrongbook') renderWrongBook();
+  if (tab === 'study') applyStudyFilter();
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = currentQuestions.length;
+  const answered = Object.keys(checkedMap).length;
+  let correct = 0;
+  let wrong = 0;
+  Object.values(checkedMap).forEach((v) => {
+    if (v.correct) correct++;
+    else wrong++;
+  });
+  document.getElementById('stat-answered').textContent = answered;
+  document.getElementById('stat-correct').textContent = correct;
+  document.getElementById('stat-wrong').textContent = wrong;
+}
+
+function arraysEqual(a, b) {
+  if (a.length !== b.length) return false;
+  return a.every((v, i) => v === b[i]);
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function exportWrongBook() {
+  const book = getWrongBook();
+  const ids = Object.keys(book).map(Number);
+  if (ids.length === 0) {
+    alert('错题集为空');
+    return;
+  }
+
+  let text = '人工智能训练师三级 - 错题集\n';
+  text += `导出时间：${new Date().toLocaleString('zh-CN')}\n`;
+  text += `共 ${ids.length} 道错题\n`;
+  text += '='.repeat(40) + '\n\n';
+
+  ids.sort((a, b) => a - b).forEach((id, i) => {
+    const q = allQuestions.find((x) => x.id === id);
+    if (!q) return;
+    const entry = book[String(id)];
+    text += `${i + 1}. [题号${id}] [${getChapterName(q.chapter)}] [${TYPE_LABELS[q.type]}] (错${entry.wrongCount}次)\n`;
+    text += `题目：${q.stem}\n`;
+    q.options.forEach((o) => {
+      text += `  ${o.id}. ${o.text}${o.correct ? ' ← 正确' : ''}\n`;
+    });
+    const userAns = entry.lastUserAnswer || [];
+    text += `你的答案：${userAns.length ? formatAnswer(q, userAns) : '未作答'}\n\n`;
+  });
+
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `错题集_${new Date().toISOString().slice(0, 10)}.txt`;
+  a.click();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+
+  document.querySelectorAll('.tab-btn').forEach((btn) => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  document.getElementById('chapter-filter').addEventListener('change', applyFilter);
+  document.getElementById('type-filter').addEventListener('change', applyFilter);
+  document.getElementById('order-filter').addEventListener('change', applyFilter);
+  document.getElementById('count-filter').addEventListener('change', applyFilter);
+
+  document.getElementById('study-chapter-filter').addEventListener('change', applyStudyFilter);
+  document.getElementById('study-type-filter').addEventListener('change', applyStudyFilter);
+  document.getElementById('study-view-mode').addEventListener('change', applyStudyFilter);
+  document.getElementById('study-prev').addEventListener('click', studyPrev);
+  document.getElementById('study-next').addEventListener('click', studyNext);
+
+  document.getElementById('btn-summary').addEventListener('click', showSummary);
+  document.getElementById('btn-reset').addEventListener('click', resetPractice);
+  document.getElementById('btn-shuffle').addEventListener('click', () => {
+    document.getElementById('order-filter').value = 'random';
+    applyFilter();
+  });
+
+  document.getElementById('btn-close-modal').addEventListener('click', () => {
+    document.getElementById('summary-modal').classList.remove('show');
+  });
+  document.getElementById('btn-reset-from-modal').addEventListener('click', resetPractice);
+
+  document.getElementById('btn-practice-wrong').addEventListener('click', practiceWrongBook);
+  document.getElementById('btn-export-wrong').addEventListener('click', exportWrongBook);
+  document.getElementById('btn-clear-wrong').addEventListener('click', clearWrongBook);
+});
+
+window.practiceOne = practiceOne;
+
+  </script>
+
+<script>
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function () {});
+  });
+}
+</script>
+</body>
+</html>

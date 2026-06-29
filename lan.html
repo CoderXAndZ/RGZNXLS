@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>手机扫码访问练习</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f0f2f5; color: #1e293b;
+      min-height: 100vh; padding: 2rem 1rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card {
+      background: #fff; border-radius: 16px; padding: 2rem;
+      max-width: 420px; width: 100%; text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,.08);
+    }
+    h1 { font-size: 1.25rem; margin-bottom: .5rem; color: #1e40af; }
+    p { color: #64748b; font-size: .9rem; line-height: 1.6; margin-bottom: 1rem; }
+    #qr { margin: 1rem auto; min-height: 200px; }
+    #qr img { border-radius: 8px; }
+    .url {
+      background: #eff6ff; color: #1d4ed8; padding: .75rem;
+      border-radius: 8px; font-size: 1.1rem; font-weight: 700;
+      word-break: break-all; margin: 1rem 0;
+    }
+    .steps { text-align: left; font-size: .85rem; color: #475569; line-height: 1.8; }
+    .steps li { margin-bottom: .35rem; }
+    a.btn {
+      display: inline-block; margin-top: 1rem; padding: .65rem 1.5rem;
+      background: #2563eb; color: #fff; text-decoration: none;
+      border-radius: 8px; font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📱 手机扫码打开练习</h1>
+    <p>手机和电脑连<strong>同一个 WiFi</strong>，用相机或浏览器扫下方二维码</p>
+    <div id="qr"></div>
+    <div class="url" id="url"></div>
+    <ol class="steps">
+      <li>扫码后 Safari / Chrome 打开练习页</li>
+      <li>点「分享」→「<strong>添加到主屏幕</strong>」</li>
+      <li>以后点桌面图标即可，<strong>地铁上也能离线用</strong></li>
+    </ol>
+    <a class="btn" id="open" href="#">在电脑上预览</a>
+  </div>
+  <script>
+    const url = location.protocol + '//' + location.hostname + ':' + location.port + '/index.html';
+    document.getElementById('url').textContent = url;
+    document.getElementById('open').href = url;
+    const img = document.createElement('img');
+    img.width = 220; img.height = 220; img.alt = '二维码';
+    img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(url);
+    document.getElementById('qr').appendChild(img);
+  </script>
+</body>
+</html>
