@@ -444,6 +444,27 @@ header p {
   display: block;
 }
 
+.explanation-box.no-content {
+  background: #f8fafc;
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+.explanation-empty {
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.q-has-exp {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #fffbeb;
+  color: #b45309;
+  font-weight: 500;
+}
+
 .explanation-title {
   font-weight: 700;
   color: #b45309;
@@ -1057,6 +1078,7 @@ function renderQuestionCard(q, idx, showAnswer) {
         <span class="q-num">第 ${idx + 1} 题（原题号 ${q.id}）</span>
         <span class="q-chapter">${escapeHtml(chapterTag)}</span>
         <span class="q-type ${q.type}">${TYPE_LABELS[q.type]}</span>
+        ${hasExplanation(q) ? '<span class="q-has-exp">含解析</span>' : ''}
       </div>
       <div class="q-stem">${escapeHtml(q.stem)}</div>
       <div class="options">${optionsHtml}</div>
@@ -1208,9 +1230,16 @@ function revealQuestionResult(q, userAns, isCorrect) {
   }
 
   const expEl = document.getElementById(`explanation-${q.id}`);
-  if (expEl && hasExplanation(q)) {
-    expEl.innerHTML = renderExplanationHtml(q);
-    expEl.classList.remove('hidden');
+  if (expEl) {
+    if (hasExplanation(q)) {
+      expEl.innerHTML = renderExplanationHtml(q);
+      expEl.classList.remove('hidden');
+      expEl.classList.add('show');
+    } else {
+      expEl.innerHTML = '<div class="explanation-empty">本题暂无答案解析</div>';
+      expEl.classList.remove('hidden');
+      expEl.classList.add('show', 'no-content');
+    }
   }
 }
 
