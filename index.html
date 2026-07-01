@@ -363,11 +363,19 @@ header p {
   cursor: pointer;
   transition: all 0.15s;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  width: 100%;
 }
 
 .option:hover:not(.disabled) {
   border-color: var(--primary);
   background: #f8fafc;
+}
+
+.option:active:not(.disabled) {
+  transform: scale(0.99);
+  background: #eff6ff;
 }
 
 .option.selected {
@@ -393,16 +401,21 @@ header p {
   margin-top: 0.25rem;
   accent-color: var(--primary);
   flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
 
 .option-label {
   font-weight: 600;
   color: var(--primary);
   min-width: 1.2rem;
+  pointer-events: none;
 }
 
 .option-text {
   flex: 1;
+  pointer-events: none;
 }
 
 .result-badge {
@@ -658,8 +671,14 @@ header p {
   }
 
   .option {
-    min-height: 48px;
-    padding: 0.75rem;
+    min-height: 52px;
+    padding: 0.85rem;
+  }
+
+  .option input {
+    width: 22px;
+    height: 22px;
+    margin-top: 0.15rem;
   }
 
   .stats {
@@ -1089,25 +1108,13 @@ function renderQuestionCard(q, idx, showAnswer) {
 }
 
 function bindQuestionEvents(container) {
-  container.querySelectorAll('.option').forEach((el) => {
+  container.querySelectorAll('.option input').forEach((input) => {
+    const el = input.closest('.option');
     const qid = Number(el.dataset.qid);
     const q = currentQuestions.find((x) => x.id === qid);
     if (!q || checkedMap[qid]) return;
 
-    el.addEventListener('click', (e) => {
-      if (checkedMap[qid]) return;
-      const input = el.querySelector('input');
-      if (e.target === input) return;
-      if (input.type === 'radio') {
-        input.checked = true;
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-      } else {
-        input.checked = !input.checked;
-        syncOptionStyle(el.closest('.options'));
-      }
-    });
-
-    el.querySelector('input').addEventListener('change', () => {
+    input.addEventListener('change', () => {
       if (checkedMap[qid]) return;
       syncOptionStyle(el.closest('.options'));
       if (q.type !== 'multiple') {
@@ -1117,7 +1124,8 @@ function bindQuestionEvents(container) {
   });
 
   container.querySelectorAll('.btn-confirm').forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
       checkQuestion(Number(btn.dataset.qid));
     });
   });
